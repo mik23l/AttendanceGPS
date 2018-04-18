@@ -80,8 +80,12 @@ public class ServerAPI implements Response.Listener<String>, Response.ErrorListe
         queue.add(request);
     }
 
-    public void startMeeting(String s, LatLng latLng) {
-        StringRequest request = new StringRequest(Request.Method.GET, getURL() + "start_meeting?meeting_name=" + s + "&lat=" + latLng.latitude + "&lon=" + latLng.longitude + "&m_date=0-0-0", hostMeetingActivity, hostMeetingActivity);
+    // FIXME add owner parameter
+    public void startMeeting(String s, LatLng latLng, String owner) {
+        StringRequest request = new StringRequest(Request.Method.GET, getURL() +
+                "start_meeting?meeting_name=" + s +
+                "&lat=" + latLng.latitude + "&lon=" + latLng.longitude +
+                "&owner=" + owner, hostMeetingActivity, hostMeetingActivity);
         queue.add(request);
     }
 

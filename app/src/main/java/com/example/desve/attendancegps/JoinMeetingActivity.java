@@ -7,7 +7,6 @@ import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
-import android.provider.SyncStateContract;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
@@ -17,10 +16,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Response;
@@ -68,14 +64,14 @@ public class JoinMeetingActivity extends FragmentActivity implements GoogleMap.O
         button = (Button) findViewById(R.id.join_submit_button);
 
         spinner = (Spinner) findViewById(R.id.spinner);
-        spinnerArray =  new ArrayList<String>();
-        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, spinnerArray);
+        spinnerArray =  new ArrayList<>();
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, spinnerArray);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         serverAPI = new ServerAPI(this);
         serverAPI.getMeetings();
 
-        meetingCoordinates = new ArrayList<LatLng>();
+        meetingCoordinates = new ArrayList<>();
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -87,7 +83,6 @@ public class JoinMeetingActivity extends FragmentActivity implements GoogleMap.O
     public void onJoinMeeting (View view) {
 
         String selectedMeeting = spinner.getSelectedItem().toString();
-
 
         Intent myIntent = new Intent(JoinMeetingActivity.this, JoinDetailsActivity.class);
         myIntent.putExtra("MEETING_NAME", selectedMeeting);
