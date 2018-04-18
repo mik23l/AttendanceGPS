@@ -28,6 +28,8 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
 
     ServerAPI serverAPI;
 
+    DatabaseManager databaseManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,8 +43,22 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
 
         serverAPI = new ServerAPI(this);
 
-
+        databaseManager = new DatabaseManager(this);
     }
+
+    /*
+    Example databaseManager usage:
+    Add user to the database:
+        // remove existing user
+        databaseManager.deleteAll();
+        int idnum = 12345;
+        String username = "my_username";
+        String pass = "my_password";
+        databaseManager.insertUserInfo(idnum, username, pass);
+
+    Get the user from the db:
+        UserInfo userInfo = databaseManager.getUserFromDB();
+     */
 
     public void onSubmit(View view) {
         Log.d("DEBUG", usernameEditText.getText().toString());
@@ -53,7 +69,6 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
 
             // Make a request to server to validate username and password
             serverAPI.login(usernameEditText.getText().toString(), passwordEditText.getText().toString());
-
         }
         else {
             Toast.makeText(getApplicationContext(), "One or more field left blank!", Toast.LENGTH_LONG).show();
