@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.desve.attendancegps.NewUserActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Enter New User Details"
+            android:textSize="25dp"
+            android:paddingBottom="20dp"/>
+
+        <EditText
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:hint="Username"
+            android:id="@+id/new_username_edit_text"
+            android:singleLine="true"
+            android:maxLength="16"/>
+
+        <EditText
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:hint="Password"
+            android:id="@+id/new_password_edit_text"
+            android:singleLine="true"
+            android:maxLength="16"
+            android:inputType="textPassword"/>
+
+        <EditText
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:hint="Re-enter Password"
+            android:id="@+id/new_reenter_password_edit_text"
+            android:singleLine="true"
+            android:maxLength="16"
+            android:inputType="textPassword"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Create User"
+            android:onClick="onCreateUser"/>
+
+
+    </LinearLayout>
+
+</RelativeLayout>
