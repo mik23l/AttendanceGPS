@@ -125,6 +125,7 @@ public class JoinMeetingActivity extends FragmentActivity implements
                 mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
                 LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                mMap.addCircle(new CircleOptions().center(latLng).radius(200));
                 serverAPI.getNearbyMeetings(latLng);
 
             }

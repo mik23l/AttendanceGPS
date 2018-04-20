@@ -21,6 +21,7 @@ public class ServerAPI {
     JoinMeetingActivity joinMeetingActivity;
     HostMeetingActivity hostMeetingActivity;
     JoinDetailsActivity joinDetailsActivity;
+    WelcomeActivity welcomeActivity;
 
     RequestQueue queue;
 
@@ -49,6 +50,13 @@ public class ServerAPI {
         queue = Volley.newRequestQueue(newUserActivity);
     }
 
+    public  ServerAPI(WelcomeActivity ma) {
+        welcomeActivity = ma;
+        queue = Volley.newRequestQueue(welcomeActivity);
+    }
+
+
+
 //    public void getUsers() {
 //        StringRequest request = new StringRequest(Request.Method.GET, getURL(), this, this);
 //        queue.add(request);
@@ -75,6 +83,11 @@ public class ServerAPI {
 
     public void getNearbyMeetings(LatLng latLng) {
         StringRequest request = new StringRequest(Request.Method.GET, getURL() + "nearby_meetings?lat=" + latLng.latitude + "&lon=" + latLng.longitude , joinMeetingActivity, joinMeetingActivity);
+        queue.add(request);
+    }
+
+    public void getMyActiveMeetings(String owner) {
+        StringRequest request = new StringRequest(Request.Method.GET, getURL() + "my_active?owner=" + owner , welcomeActivity, welcomeActivity);
         queue.add(request);
     }
 

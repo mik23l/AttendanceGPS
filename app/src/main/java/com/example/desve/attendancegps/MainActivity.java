@@ -79,12 +79,12 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
             JSONObject jsonObject = new JSONObject(response);
             Log.d("DEBUG", jsonObject.toString());
 
-            JSONObject userObject = jsonObject.getJSONObject("user");
-            Log.d("DEBUG", userObject.toString());
-
             // Check if response was true or false
             Boolean success = jsonObject.getBoolean("success"); // FIXME need to also check if the username doesn't exist yet
             if(success) {
+
+                JSONObject userObject = jsonObject.getJSONObject("user");
+                Log.d("DEBUG", userObject.toString());
 
                 // Remove current user from local database
                 databaseManager.deleteAll();
@@ -96,6 +96,7 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
                 MainActivity.this.startActivity(myIntent);
             }
             else {
+                Log.d("DEBUG", "Toasting...");
                 Toast.makeText(getApplicationContext(), "Incorrect username or password!", Toast.LENGTH_LONG).show();
             }
 

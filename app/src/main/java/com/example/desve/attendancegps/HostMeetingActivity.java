@@ -75,8 +75,7 @@ public class HostMeetingActivity extends FragmentActivity implements GoogleMap.O
         Log.d("DEBUG", "Start meeting called...");
         serverAPI.startMeeting(editText.getText().toString(), latLng, userInfo.m_username, organizationEditText.getText().toString());
 
-        Intent myIntent = new Intent(HostMeetingActivity.this, HostDetailsActivity.class);
-        HostMeetingActivity.this.startActivity(myIntent);
+
     }
 
     @Override
@@ -145,9 +144,18 @@ public class HostMeetingActivity extends FragmentActivity implements GoogleMap.O
     @Override
     public void onResponse(String response) {
         try {
-            Log.d("DEBUG", "MapsActivity");
+            Log.d("DEBUG", "HostMeetingActivity");
             JSONObject jsonObject = new JSONObject(response);
             Log.d("DEBUG", jsonObject.toString());
+
+            if(jsonObject.has("ERROR")) {
+                Toast.makeText(getApplicationContext(), "Already own an active meeting. End your previous meeting to start another!", Toast.LENGTH_LONG).show();
+            }
+            else {
+                Intent myIntent = new Intent(HostMeetingActivity.this, HostDetailsActivity.class);
+                HostMeetingActivity.this.startActivity(myIntent);
+            }
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -156,6 +164,6 @@ public class HostMeetingActivity extends FragmentActivity implements GoogleMap.O
 
     @Override
     public void onErrorResponse(VolleyError error) {
-
+        Log.d("DEBUG",error.toString());
     }
 }
