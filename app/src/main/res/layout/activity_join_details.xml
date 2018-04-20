@@ -1,34 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.desve.attendancegps.JoinDetailsActivity">
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Meeting name"
-        android:textSize="25dp"
-        android:id="@+id/meeting_name"
-        android:layout_alignParentTop="true"
-        android:layout_centerInParent="true"/>
+    tools:context="com.example.desve.attendancegps.JoinDetailsActivity"
+    android:id="@+id/refreshLayout">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:gravity="center">
+        android:orientation="vertical">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Owner: null"
-            android:id="@+id/owner_name"
-            />
+            android:text="Meeting name"
+            android:textSize="25dp"
+            android:id="@+id/meeting_name"
+            android:layout_alignParentTop="true"
+            android:layout_centerInParent="true"
+            android:layout_marginBottom="10dp"/>
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Organization"
+            android:id="@+id/organization"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Owner: null"
+                android:id="@+id/owner_name"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Start Time: none yet"
+                android:id="@+id/star_time"
+                />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Users:"/>
+
+        <android.support.v4.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:id="@+id/users_list"/>
+
+        </android.support.v4.widget.NestedScrollView>
 
     </LinearLayout>
 
-</RelativeLayout>
+</android.support.v4.widget.SwipeRefreshLayout>
