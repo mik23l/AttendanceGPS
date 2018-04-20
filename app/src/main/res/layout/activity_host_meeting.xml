@@ -26,7 +26,15 @@
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:hint="Meeting name"
-        android:id="@+id/host_meeting_edit_text"/>
+        android:id="@+id/host_meeting_edit_text"
+        android:singleLine="true"/>
+
+    <EditText
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:hint="Organization"
+        android:id="@+id/organization_edit_text"
+        android:singleLine="true"/>
 
     <Button
         android:layout_width="200dp"

@@ -74,7 +74,7 @@ public class JoinMeetingActivity extends FragmentActivity implements
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         serverAPI = new ServerAPI(this);
-        serverAPI.getMeetings();
+//        serverAPI.getNearybyMeetings();
 
         meetingCoordinates = new ArrayList<>();
         meetingInfoHashMap = new HashMap<>();
@@ -108,6 +108,7 @@ public class JoinMeetingActivity extends FragmentActivity implements
             mMap.setOnMyLocationClickListener(this);
 
             LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
             Criteria criteria = new Criteria();
 
             Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
@@ -122,6 +123,9 @@ public class JoinMeetingActivity extends FragmentActivity implements
                         .tilt(40)                   // Sets the tilt of the camera to 30 degrees
                         .build();                   // Creates a CameraPosition from the builder
                 mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+                LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                serverAPI.getNearbyMeetings(latLng);
 
             }
         } else {
@@ -162,7 +166,7 @@ public class JoinMeetingActivity extends FragmentActivity implements
         Log.d("DEBUG", "" + meetingCoordinates.size());
         for(int i = 0; i < meetingCoordinates.size(); i++) {
             mMap.addMarker(new MarkerOptions().position(meetingCoordinates.get(i)).title(spinnerArray.get(i)));
-            mMap.addCircle(new CircleOptions().center(meetingCoordinates.get(i)).radius(200));
+//            mMap.addCircle(new CircleOptions().center(meetingCoordinates.get(i)).radius(200));
         }
     }
 
@@ -173,7 +177,7 @@ public class JoinMeetingActivity extends FragmentActivity implements
             JSONObject jsonObject = new JSONObject(response);
             Log.d("DEBUG", jsonObject.toString());
 
-            JSONArray list = jsonObject.optJSONArray("meetings");
+            JSONArray list = jsonObject.optJSONArray("nearby");
 
             for (int i = 0; i < list.length(); i++) {
                 JSONObject meeting = list.optJSONObject(i);

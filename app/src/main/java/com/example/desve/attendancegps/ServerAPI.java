@@ -73,17 +73,23 @@ public class ServerAPI {
         queue.add(request);
     }
 
-    // FIXME add owner parameter
-    public void startMeeting(String s, LatLng latLng, String owner) {
-        StringRequest request = new StringRequest(Request.Method.GET, getURL() +
-                "start_meeting?meeting_name=" + s +
-                "&lat=" + latLng.latitude + "&lon=" + latLng.longitude +
-                "&owner=" + owner, hostMeetingActivity, hostMeetingActivity);
+    public void getNearbyMeetings(LatLng latLng) {
+        StringRequest request = new StringRequest(Request.Method.GET, getURL() + "nearby_meetings?lat=" + latLng.latitude + "&lon=" + latLng.longitude , joinMeetingActivity, joinMeetingActivity);
         queue.add(request);
     }
 
-    public void joinMeeting(String meetingID, String userID) {
-        StringRequest request = new StringRequest(Request.Method.GET, getURL() + "join_meeting?meeting=" + meetingID + "&user=" + userID, joinDetailsActivity, joinDetailsActivity);
+    // FIXME add owner parameter
+    public void startMeeting(String s, LatLng latLng, String owner, String organization) {
+        StringRequest request = new StringRequest(Request.Method.GET, getURL() +
+                "start_meeting?meeting_name=" + s +
+                "&lat=" + latLng.latitude + "&lon=" + latLng.longitude +
+                "&owner=" + owner + "&org=" + organization,
+                hostMeetingActivity, hostMeetingActivity);
+        queue.add(request);
+    }
+
+    public void joinMeeting(String meetingID, String username) {
+        StringRequest request = new StringRequest(Request.Method.GET, getURL() + "join_meeting?meeting=" + meetingID + "&user=" + username, joinDetailsActivity, joinDetailsActivity);
         queue.add(request);
     }
 

@@ -38,8 +38,12 @@ public class HostMeetingActivity extends FragmentActivity implements GoogleMap.O
 
     Button button;
     EditText editText;
+    EditText organizationEditText;
 
     ServerAPI serverAPI;
+
+    DatabaseManager databaseManager;
+    UserInfo userInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,8 +52,14 @@ public class HostMeetingActivity extends FragmentActivity implements GoogleMap.O
 
         button = findViewById(R.id.host_submit_button);
         editText = findViewById(R.id.host_meeting_edit_text);
+        organizationEditText = findViewById(R.id.organization_edit_text);
 
         serverAPI = new ServerAPI(this);
+
+        databaseManager = new DatabaseManager(this);
+
+        databaseManager.open();
+        userInfo = databaseManager.getUserFromDB();
 
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -62,7 +72,8 @@ public class HostMeetingActivity extends FragmentActivity implements GoogleMap.O
     public void onHostMeeting (View view) {
         Location currentLocation = mMap.getMyLocation();
         LatLng latLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-        serverAPI.startMeeting(editText.getText().toString(), latLng, "owner");
+        Log.d("DEBUG", "Start meeting called...");
+        serverAPI.startMeeting(editText.getText().toString(), latLng, userInfo.m_username, organizationEditText.getText().toString());
 
         Intent myIntent = new Intent(HostMeetingActivity.this, HostDetailsActivity.class);
         HostMeetingActivity.this.startActivity(myIntent);

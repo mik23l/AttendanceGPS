@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -38,7 +39,6 @@ public class NewUserActivity extends AppCompatActivity implements Response.Liste
 
     }
 
-    // TODO -- add name field to server call
     public void onCreateUser(View view) {
 
         // Check if username and password are blank
@@ -63,13 +63,15 @@ public class NewUserActivity extends AppCompatActivity implements Response.Liste
         try {
             JSONObject jsonObject = new JSONObject(response);
 
+            Log.d("DEBUG", jsonObject.toString());
+
             // Check if username is already in use
             if(!jsonObject.has("ERROR")) {
 
                 // Remove current user from local database
                 databaseManager.deleteAll();
                 // Insert new user into local database
-                databaseManager.insertUserInfo(jsonObject.getInt("id"), jsonObject.getString("password").toString(), jsonObject.getString("username").toString());
+                databaseManager.insertUserInfo(jsonObject.getInt("id"), jsonObject.getString("username").toString(), jsonObject.getString("password").toString());
 
                 // Start welcome activity
                 Intent myIntent = new Intent(NewUserActivity.this, WelcomeActivity.class);

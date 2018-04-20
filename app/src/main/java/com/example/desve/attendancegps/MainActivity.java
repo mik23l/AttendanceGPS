@@ -77,10 +77,20 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
     public void onResponse(String response) {
         try {
             JSONObject jsonObject = new JSONObject(response);
+            Log.d("DEBUG", jsonObject.toString());
+
+            JSONObject userObject = jsonObject.getJSONObject("user");
+            Log.d("DEBUG", userObject.toString());
 
             // Check if response was true or false
             Boolean success = jsonObject.getBoolean("success"); // FIXME need to also check if the username doesn't exist yet
             if(success) {
+
+                // Remove current user from local database
+                databaseManager.deleteAll();
+                // Insert new user into local database
+                databaseManager.insertUserInfo(userObject.getInt("id"), userObject.getString("username").toString(), userObject.getString("password").toString());
+
                 // Start welcome activity
                 Intent myIntent = new Intent(MainActivity.this, WelcomeActivity.class);
                 MainActivity.this.startActivity(myIntent);
