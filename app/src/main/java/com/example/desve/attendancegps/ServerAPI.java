@@ -4,24 +4,17 @@ import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.maps.model.LatLng;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 /**
  * Created by Desve on 4/11/2018.
  */
 
-public class ServerAPI implements Response.Listener<String>, Response.ErrorListener {
+public class ServerAPI {
 
     String requestURL = "https://mobileapps-199414.appspot.com/";
-
 
     MainActivity mainActivity;
     NewUserActivity newUserActivity;
@@ -56,10 +49,10 @@ public class ServerAPI implements Response.Listener<String>, Response.ErrorListe
         queue = Volley.newRequestQueue(newUserActivity);
     }
 
-    public void getUsers() {
-        StringRequest request = new StringRequest(Request.Method.GET, getURL(), this, this);
-        queue.add(request);
-    }
+//    public void getUsers() {
+//        StringRequest request = new StringRequest(Request.Method.GET, getURL(), this, this);
+//        queue.add(request);
+//    }
 
     public String getURL() {
         return requestURL;
@@ -93,27 +86,4 @@ public class ServerAPI implements Response.Listener<String>, Response.ErrorListe
         StringRequest request = new StringRequest(Request.Method.GET, getURL() + "join_meeting?meeting=" + meetingID + "&user=" + userID, joinDetailsActivity, joinDetailsActivity);
         queue.add(request);
     }
-
-    @Override
-    public void onErrorResponse(VolleyError error) {
-
-    }
-
-    @Override
-    public void onResponse(String response) {
-        try {
-            Log.d("DEBUG", "ServerAPI");
-            JSONObject jsonObject = new JSONObject(response);
-            Log.d("DEBUG", jsonObject.toString());
-
-
-
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-
 }

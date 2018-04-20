@@ -35,9 +35,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
-public class JoinMeetingActivity extends FragmentActivity implements GoogleMap.OnMyLocationButtonClickListener, Response.Listener<String>, Response.ErrorListener,
+public class JoinMeetingActivity extends FragmentActivity implements
+        GoogleMap.OnMyLocationButtonClickListener,
+        Response.Listener<String>,
+        Response.ErrorListener,
         GoogleMap.OnMyLocationClickListener,
         OnMapReadyCallback {
 
@@ -51,6 +55,7 @@ public class JoinMeetingActivity extends FragmentActivity implements GoogleMap.O
     ArrayAdapter<String> adapter;
 
     List<LatLng> meetingCoordinates;
+    HashMap<String, MeetingInfo> meetingInfoHashMap;
 
     ServerAPI serverAPI;
 
@@ -61,9 +66,9 @@ public class JoinMeetingActivity extends FragmentActivity implements GoogleMap.O
 
         Intent intent = getIntent();
 
-        button = (Button) findViewById(R.id.join_submit_button);
+        button = findViewById(R.id.join_submit_button);
 
-        spinner = (Spinner) findViewById(R.id.spinner);
+        spinner = findViewById(R.id.spinner);
         spinnerArray =  new ArrayList<>();
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, spinnerArray);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -72,6 +77,7 @@ public class JoinMeetingActivity extends FragmentActivity implements GoogleMap.O
         serverAPI.getMeetings();
 
         meetingCoordinates = new ArrayList<>();
+        meetingInfoHashMap = new HashMap<>();
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -85,7 +91,7 @@ public class JoinMeetingActivity extends FragmentActivity implements GoogleMap.O
         String selectedMeeting = spinner.getSelectedItem().toString();
 
         Intent myIntent = new Intent(JoinMeetingActivity.this, JoinDetailsActivity.class);
-        myIntent.putExtra("MEETING_NAME", selectedMeeting);
+        myIntent.putExtra("MEETING", meetingInfoHashMap.get(selectedMeeting));
         JoinMeetingActivity.this.startActivity(myIntent);
     }
 
@@ -172,16 +178,17 @@ public class JoinMeetingActivity extends FragmentActivity implements GoogleMap.O
             for (int i = 0; i < list.length(); i++) {
                 JSONObject meeting = list.optJSONObject(i);
                 String name = meeting.getString("name");
-                Log.d("DEBUG", name);
-                spinnerArray.add(name);
-
                 Double lat = meeting.getDouble("lat");
-                Log.d("DEBUG", "" + lat);
                 Double lon = meeting.getDouble("lon");
-                Log.d("DEBUG", "" + lon);
                 LatLng latLng = new LatLng(lat, lon);
-                meetingCoordinates.add(latLng);
+                int id = meeting.getInt("id");
 
+                MeetingInfo m = new MeetingInfo(id, name);
+                // TODO add more info
+
+                meetingInfoHashMap.put(name, m);
+                spinnerArray.add(name);
+                meetingCoordinates.add(latLng);
             }
 
             spinner.setAdapter(adapter);

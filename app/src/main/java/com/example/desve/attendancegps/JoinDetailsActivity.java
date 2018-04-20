@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import com.android.volley.Response;
@@ -16,7 +15,7 @@ import org.json.JSONObject;
 public class JoinDetailsActivity extends AppCompatActivity implements Response.Listener<String>, Response.ErrorListener {
 
     TextView meetingName;
-
+    MeetingInfo meetingInfo;
     ServerAPI serverAPI;
 
     @Override
@@ -26,14 +25,13 @@ public class JoinDetailsActivity extends AppCompatActivity implements Response.L
 
         serverAPI = new ServerAPI(this);
 
-        meetingName = (TextView) findViewById(R.id.meeting_name);
+        meetingName = findViewById(R.id.meeting_name);
 
         Intent intent = getIntent();
-        String meetingNameString = intent.getStringExtra("MEETING_NAME");
+        meetingInfo = (MeetingInfo) intent.getSerializableExtra("MEETING");
 
-        meetingName.setText(meetingNameString);
-
-        serverAPI.joinMeeting("5741031244955648","5648554290839552");
+        serverAPI.joinMeeting(String.valueOf(meetingInfo.getId()), "5648554290839552");
+        meetingName.setText(meetingInfo.getName());
     }
 
     @Override
@@ -48,13 +46,9 @@ public class JoinDetailsActivity extends AppCompatActivity implements Response.L
             JSONObject jsonObject = new JSONObject(response);
             Log.d("DEBUG", jsonObject.toString());
 
-
-
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
-
 
 }
