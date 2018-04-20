@@ -101,15 +101,15 @@ public class JoinDetailsActivity extends AppCompatActivity implements Response.L
             Double lon = object.getDouble("lon");
             LatLng latLng = new LatLng(lat, lon);
             String id = object.getString("id");
+            String start_time = object.getString("date");
 
+            meetingInfo.setOwner(object.getString("owner"));
+            meetingInfo.setStartDate(start_time);
             // TODO add more info
             if (object.has("organization")) {
                 meetingInfo.setOrg(object.getString("organization"));
             }
 
-            if (object.has("owner")) {
-                meetingInfo.setOwner(object.getString("owner"));
-            }
 
             if (object.has("users")) {
                 List<String> users = new ArrayList<>();

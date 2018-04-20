@@ -46,10 +46,8 @@ public class HostMeetingActivity extends FragmentActivity implements GoogleMap.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_host_meeting);
 
-        Intent intent = getIntent();
-
-        button = (Button) findViewById(R.id.host_submit_button);
-        editText = (EditText) findViewById(R.id.host_meeting_edit_text);
+        button = findViewById(R.id.host_submit_button);
+        editText = findViewById(R.id.host_meeting_edit_text);
 
         serverAPI = new ServerAPI(this);
 
@@ -139,9 +137,6 @@ public class HostMeetingActivity extends FragmentActivity implements GoogleMap.O
             Log.d("DEBUG", "MapsActivity");
             JSONObject jsonObject = new JSONObject(response);
             Log.d("DEBUG", jsonObject.toString());
-
-
-
         } catch (JSONException e) {
             e.printStackTrace();
         }

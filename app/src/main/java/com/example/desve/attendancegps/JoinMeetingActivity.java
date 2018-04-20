@@ -189,10 +189,8 @@ public class JoinMeetingActivity extends FragmentActivity implements
                 if (meeting.has("organization")) {
                     m.setOrg(meeting.getString("organization"));
                 }
-
-                if (meeting.has("owner")) {
-                    m.setOwner(meeting.getString("owner"));
-                }
+                m.setOwner(meeting.getString("owner"));
+                m.setStartDate(meeting.getString("date"));
 
                 if (meeting.has("users")) {
                     List<String> users = new ArrayList<>();
