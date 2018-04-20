@@ -38,6 +38,7 @@ public class NewUserActivity extends AppCompatActivity implements Response.Liste
 
     }
 
+    // TODO -- add name field to server call
     public void onCreateUser(View view) {
 
         // Check if username and password are blank
