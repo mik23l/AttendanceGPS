@@ -20,12 +20,10 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
 
     EditText usernameEditText;
     EditText passwordEditText;
-    Button submitButton;
+    Button   submitButton;
+    Button   newUserButton;
 
-    Button newUserButton;
-
-    ServerAPI serverAPI;
-
+    ServerAPI       serverAPI;
     DatabaseManager databaseManager;
 
     @Override
@@ -35,40 +33,33 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
 
         usernameEditText = (EditText) findViewById(R.id.username_edit_text);
         passwordEditText = (EditText) findViewById(R.id.password_edit_text);
-        submitButton = (Button) findViewById(R.id.submit_button);
+        submitButton     = (Button)   findViewById(R.id.submit_button);
+        newUserButton    = (Button)   findViewById(R.id.new_user_button);
 
-        newUserButton = (Button) findViewById(R.id.new_user_button);
-
-        serverAPI = new ServerAPI(this);
-
+        serverAPI = new ServerAPI (this);
         databaseManager = new DatabaseManager(this);
+
+        // Check if user already exists in the database and attempt to sign in
+        databaseManager.open();
+        UserInfo userInfo = databaseManager.getUserFromDB();
+
+        // Set username and password while loading
+        usernameEditText.setText(userInfo.m_username);
+        passwordEditText.setText(userInfo.m_password);
+
+        serverAPI.login(userInfo.m_username, userInfo.m_password);
+
     }
 
-    /*
-    Example databaseManager usage:
-    Add user to the database:
-        // remove existing user
-        databaseManager.deleteAll();
-        int idnum = 12345;
-        String username = "my_username";
-        String pass = "my_password";
-        databaseManager.insertUserInfo(idnum, username, pass);
-
-    Get the user from the db:
-        UserInfo userInfo = databaseManager.getUserFromDB();
-     */
-
     public void onSubmit(View view) {
-        Log.d("DEBUG", usernameEditText.getText().toString());
-        Log.d("DEBUG", passwordEditText.getText().toString());
 
-        // Check if username and password are blank
+        // Check if username and password are not blank
         if(!TextUtils.isEmpty(usernameEditText.getText()) && !TextUtils.isEmpty(passwordEditText.getText())) {
 
             // Make a request to server to validate username and password
             serverAPI.login(usernameEditText.getText().toString(), passwordEditText.getText().toString());
         }
-        else {
+        else { // Username or password field is blank
             Toast.makeText(getApplicationContext(), "One or more field left blank!", Toast.LENGTH_LONG).show();
         }
     }
@@ -80,23 +71,15 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
     }
 
     @Override
-    public void onErrorResponse(VolleyError error) {
-
-    }
-
-    @Override
     public void onResponse(String response) {
         try {
-            Log.d("DEBUG", "MainActivity");
             JSONObject jsonObject = new JSONObject(response);
-            Log.d("DEBUG", jsonObject.toString());
 
             // Check if response was true or false
             Boolean success = jsonObject.getBoolean("success"); // FIXME need to also check if the username doesn't exist yet
             if(success) {
-
+                // Start welcome activity
                 Intent myIntent = new Intent(MainActivity.this, WelcomeActivity.class);
-                myIntent.putExtra("USERNAME", usernameEditText.getText().toString());
                 MainActivity.this.startActivity(myIntent);
             }
             else {
@@ -108,5 +91,8 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
         }
     }
 
+    @Override
+    public void onErrorResponse(VolleyError error) {
 
+    }
 }

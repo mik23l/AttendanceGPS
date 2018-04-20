@@ -4,12 +4,9 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
@@ -23,6 +20,7 @@ public class NewUserActivity extends AppCompatActivity implements Response.Liste
     EditText reenterEditText;
 
     ServerAPI serverAPI;
+    DatabaseManager databaseManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,12 +33,12 @@ public class NewUserActivity extends AppCompatActivity implements Response.Liste
 
         serverAPI = new ServerAPI(this);
 
+        databaseManager = new DatabaseManager(this);
+        databaseManager.open();
+
     }
 
     public void onCreateUser(View view) {
-        Log.d("DEBUG", usernameEditText.getText().toString());
-        Log.d("DEBUG", passwordEditText.getText().toString());
-        Log.d("DEBUG", reenterEditText.getText().toString());
 
         // Check if username and password are blank
         if(!TextUtils.isEmpty(usernameEditText.getText()) && !TextUtils.isEmpty(passwordEditText.getText()) && !TextUtils.isEmpty(reenterEditText.getText())) {
@@ -62,14 +60,18 @@ public class NewUserActivity extends AppCompatActivity implements Response.Liste
     @Override
     public void onResponse(String response) {
         try {
-            Log.d("DEBUG", "NewUserActivity");
             JSONObject jsonObject = new JSONObject(response);
-            Log.d("DEBUG", jsonObject.toString());
 
             // Check if username is already in use
             if(!jsonObject.has("ERROR")) {
+
+                // Remove current user from local database
+                databaseManager.deleteAll();
+                // Insert new user into local database
+                databaseManager.insertUserInfo(jsonObject.getInt("id"), jsonObject.getString("password").toString(), jsonObject.getString("username").toString());
+
+                // Start welcome activity
                 Intent myIntent = new Intent(NewUserActivity.this, WelcomeActivity.class);
-                myIntent.putExtra("USERNAME", usernameEditText.getText().toString());
                 NewUserActivity.this.startActivity(myIntent);
             }
 
@@ -86,4 +88,5 @@ public class NewUserActivity extends AppCompatActivity implements Response.Liste
     public void onErrorResponse(VolleyError error) {
 
     }
+
 }

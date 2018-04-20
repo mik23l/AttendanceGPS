@@ -40,8 +40,12 @@ public class DatabaseManager {
                         DBOpenHelper.COLUMN_USERNAME, DBOpenHelper.COLUMN_PASSWORD},
                 null, null, null, null, null);
         cursor.moveToFirst();
-        UserInfo userInfo = new UserInfo(cursor.getInt(1), cursor.getString(2), cursor.getString(3));
-        return userInfo;
+        try {
+            UserInfo userInfo = new UserInfo(cursor.getInt(1), cursor.getString(2), cursor.getString(3));
+            return userInfo;
+        } catch (RuntimeException e) {
+            return new UserInfo(-1, "", "");
+        }
     }
 
     public void deleteAll() {
