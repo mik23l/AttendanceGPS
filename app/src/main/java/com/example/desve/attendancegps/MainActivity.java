@@ -43,12 +43,15 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
         databaseManager.open();
         UserInfo userInfo = databaseManager.getUserFromDB();
 
-        // Set username and password while loading
-        usernameEditText.setText(userInfo.m_username);
-        passwordEditText.setText(userInfo.m_password);
+        Log.d("debug", "Loaded: " + userInfo.m_username);
+        if (!userInfo.m_username.equals("")) {
+            Log.d("debug", "Using database login");
+            // Set username and password while loading
+            usernameEditText.setText(userInfo.m_username);
+            passwordEditText.setText(userInfo.m_password);
 
-        serverAPI.login(userInfo.m_username, userInfo.m_password);
-
+            serverAPI.login(userInfo.m_username, userInfo.m_password);
+        }
     }
 
     public void onSubmit(View view) {
