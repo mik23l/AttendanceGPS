@@ -92,7 +92,7 @@ public class JoinMeetingActivity extends FragmentActivity implements
 
         Intent myIntent = new Intent(JoinMeetingActivity.this, JoinDetailsActivity.class);
         myIntent.putExtra("MEETING", meetingInfoHashMap.get(selectedMeeting));
-        JoinMeetingActivity.this.startActivity(myIntent);
+        startActivity(myIntent);
     }
 
     @Override
@@ -181,10 +181,27 @@ public class JoinMeetingActivity extends FragmentActivity implements
                 Double lat = meeting.getDouble("lat");
                 Double lon = meeting.getDouble("lon");
                 LatLng latLng = new LatLng(lat, lon);
-                int id = meeting.getInt("id");
+                String id = meeting.getString("id");
+                Log.d("DEBUG", "ID 1 = " + id);
 
                 MeetingInfo m = new MeetingInfo(id, name);
                 // TODO add more info
+                if (meeting.has("organization")) {
+                    m.setOrg(meeting.getString("organization"));
+                }
+
+                if (meeting.has("owner")) {
+                    m.setOwner(meeting.getString("owner"));
+                }
+
+                if (meeting.has("users")) {
+                    List<String> users = new ArrayList<>();
+                    JSONArray jsonArray = (JSONArray) meeting.get("users");
+                    for (int j=0; j<jsonArray.length(); j++)
+                        users.add(jsonArray.getString(j));
+                    m.setUsers(users);
+                    Log.d("debug", "" + meeting.getJSONArray("users"));
+                }
 
                 meetingInfoHashMap.put(name, m);
                 spinnerArray.add(name);

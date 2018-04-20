@@ -11,35 +11,35 @@ import java.util.List;
 
 public class MeetingInfo implements Serializable {
 
-    int id;
+    String id;
     String name;
     String startDate;
     String endDate;
     String duration;
-    List<Integer> users;
+    List<String> users;
     LatLng coor;
+    String owner;
+
     String org;
 
-    public int getOwner() {
+    public String getOwner() {
         return owner;
     }
 
-    public void setOwner(int owner) {
+    public void setOwner(String owner) {
         this.owner = owner;
     }
 
-    int owner;
-
-    public MeetingInfo(int id, String name) {
+    public MeetingInfo(String id, String name) {
         this.id = id;
         this.name = name;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -75,11 +75,11 @@ public class MeetingInfo implements Serializable {
         this.duration = duration;
     }
 
-    public List<Integer> getUsers() {
+    public List<String> getUsers() {
         return users;
     }
 
-    public void setUsers(List<Integer> users) {
+    public void setUsers(List<String> users) {
         this.users = users;
     }
 

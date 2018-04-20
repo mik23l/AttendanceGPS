@@ -5,19 +5,29 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.google.android.gms.maps.model.LatLng;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class JoinDetailsActivity extends AppCompatActivity implements Response.Listener<String>, Response.ErrorListener, SwipeRefreshLayout.OnRefreshListener {
 
     TextView meetingName;
+    TextView orgText;
+    TextView ownerText;
+    TextView startText;
     MeetingInfo meetingInfo;
     ServerAPI serverAPI;
+    LinearLayout userLayout;
     SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
@@ -28,18 +38,90 @@ public class JoinDetailsActivity extends AppCompatActivity implements Response.L
         serverAPI = new ServerAPI(this);
 
         meetingName = findViewById(R.id.meeting_name);
+        orgText = findViewById(R.id.organization);
         swipeRefreshLayout = findViewById(R.id.refreshLayout);
+        startText = findViewById(R.id.start_time);
+        ownerText = findViewById(R.id.owner_name);
+        userLayout = findViewById(R.id.users_list);
+
         swipeRefreshLayout.setOnRefreshListener(this);
 
         Intent intent = getIntent();
         meetingInfo = (MeetingInfo) intent.getSerializableExtra("MEETING");
 
-        serverAPI.joinMeeting(String.valueOf(meetingInfo.getId()), "5648554290839552");
+        serverAPI.joinMeeting(String.valueOf(meetingInfo.getId()), "app_user");
+
         meetingName.setText(meetingInfo.getName());
+        updateUI();
     }
 
-    private void handleRefresh() {
+    private void updateUI() {
+        if (meetingInfo.getOrg() != null) {
+            orgText.setText("Organization: " + meetingInfo.getOrg());
+        }
+        else {
+            orgText.setText("");
+        }
 
+        if (meetingInfo.getOwner() != null) {
+            ownerText.setText("Owner: " + meetingInfo.getOwner());
+        }
+        else {
+            ownerText.setText("");
+        }
+
+        if (meetingInfo.getStartDate() != null) {
+            startText.setText("Start Time: " + meetingInfo.getStartDate());
+        }
+        else {
+            startText.setText("");
+        }
+
+        if (meetingInfo.getUsers() != null) {
+            userLayout.removeAllViews();
+            for (String user : meetingInfo.getUsers()) {
+                TextView tv = new TextView(this);
+                tv.setText(user);
+                userLayout.addView(tv);
+            }
+        }
+    }
+
+    private void handleRefresh(JSONObject object) {
+        Log.d("DEBUG", "handle refresh");
+        parseJSON(object);
+        updateUI();
+        swipeRefreshLayout.setRefreshing(false);
+    }
+
+    private void parseJSON(JSONObject object) {
+        try {
+            String name = object.getString("name");
+            Double lat = object.getDouble("lat");
+            Double lon = object.getDouble("lon");
+            LatLng latLng = new LatLng(lat, lon);
+            String id = object.getString("id");
+
+            // TODO add more info
+            if (object.has("organization")) {
+                meetingInfo.setOrg(object.getString("organization"));
+            }
+
+            if (object.has("owner")) {
+                meetingInfo.setOwner(object.getString("owner"));
+            }
+
+            if (object.has("users")) {
+                List<String> users = new ArrayList<>();
+                JSONArray jsonArray = (JSONArray) object.get("users");
+                for (int j=0; j<jsonArray.length(); j++)
+                    users.add(jsonArray.getString(j));
+                Log.d("DEBUG", "" + users);
+                meetingInfo.setUsers(users);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -53,6 +135,7 @@ public class JoinDetailsActivity extends AppCompatActivity implements Response.L
             Log.d("DEBUG", "ServerAPI");
             JSONObject jsonObject = new JSONObject(response);
             Log.d("DEBUG", jsonObject.toString());
+            handleRefresh(jsonObject);
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -62,7 +145,6 @@ public class JoinDetailsActivity extends AppCompatActivity implements Response.L
     @Override
     public void onRefresh() {
         Log.d("DEBUG", "refreshing");
-        handleRefresh();
-        swipeRefreshLayout.setRefreshing(false);
+        serverAPI.getMeeting(meetingInfo.getId());
     }
 }

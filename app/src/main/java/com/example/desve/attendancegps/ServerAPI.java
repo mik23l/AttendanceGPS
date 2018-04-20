@@ -86,4 +86,10 @@ public class ServerAPI {
         StringRequest request = new StringRequest(Request.Method.GET, getURL() + "join_meeting?meeting=" + meetingID + "&user=" + userID, joinDetailsActivity, joinDetailsActivity);
         queue.add(request);
     }
+
+    public void getMeeting(String id) {
+        Log.d("DEBUG", "ID = " + id);
+        StringRequest request = new StringRequest(Request.Method.GET, getURL() + "meeting/" + id , joinDetailsActivity, joinDetailsActivity);
+        queue.add(request);
+    }
 }
