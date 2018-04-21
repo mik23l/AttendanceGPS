@@ -1,5 +1,7 @@
 package com.example.desve.attendancegps;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -26,6 +29,7 @@ public class HostDetailsActivity extends AppCompatActivity implements Response.L
     LinearLayout userLayout;
     SwipeRefreshLayout swipeRefreshLayout;
     UserInfo userInfo;
+    Button endMeetingButton;
 
     DatabaseManager databaseManager;
 
@@ -51,6 +55,7 @@ public class HostDetailsActivity extends AppCompatActivity implements Response.L
         startText = findViewById(R.id.start_time);
         ownerText = findViewById(R.id.owner_name);
         userLayout = findViewById(R.id.users_list);
+        endMeetingButton = findViewById(R.id.endMeeting);
 
         swipeRefreshLayout.setOnRefreshListener(this);
         meetingName.setText(meetingInfo.getName());
@@ -58,10 +63,21 @@ public class HostDetailsActivity extends AppCompatActivity implements Response.L
     }
 
     public void askEndMeeting(View view) {
+        new AlertDialog.Builder(this)
+                .setTitle("Options")
+                .setMessage("End this meeting?")
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        Toast.makeText(HostDetailsActivity.this, "Ended Meeting", Toast.LENGTH_SHORT).show();
+                        serverAPI.endMeeting(meetingInfo.getId());
+                    }})
+                .setNegativeButton(android.R.string.no, null).show();
     }
 
     private void updateUI() {
-        if (!meetingInfo.getOrg().equals("null")) {
+        if (meetingInfo.getOrg() != null) {
             Log.d("DEBUG", "ORG = " + meetingInfo.getOrg());
             orgText.setText("Organization: " + meetingInfo.getOrg());
         } else {
@@ -100,14 +116,22 @@ public class HostDetailsActivity extends AppCompatActivity implements Response.L
 
     @Override
     public void onErrorResponse(VolleyError error) {
-
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
     public void onResponse(String response) {
         try {
             JSONObject jsonObject = new JSONObject(response);
-            handleRefresh(jsonObject);
+            if (jsonObject.has("ended meeting")) {
+                JSONObject meetingObject = (JSONObject) jsonObject.get("ended meeting");
+                Log.d("DEBUG", "ENDED : " + meetingObject.toString());
+                handleRefresh(meetingObject);
+                endMeetingButton.setVisibility(View.INVISIBLE);
+            }
+            else {
+                handleRefresh(jsonObject);
+            }
 
         } catch (JSONException e) {
             e.printStackTrace();

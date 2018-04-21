@@ -123,4 +123,9 @@ public class ServerAPI {
         StringRequest request = new StringRequest(Request.Method.GET, getURL() + "meeting/" + id , hostDetailsActivity, hostDetailsActivity);
         queue.add(request);
     }
+
+    public void endMeeting(String id) {
+        StringRequest request = new StringRequest(Request.Method.GET, getURL() + "meeting/" + id + "/end_meeting", hostDetailsActivity, hostDetailsActivity);
+        queue.add(request);
+    }
 }

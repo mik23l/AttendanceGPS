@@ -71,9 +71,11 @@ public class HostMeetingActivity extends FragmentActivity implements GoogleMap.O
 
     public void onHostMeeting (View view) {
         Location currentLocation = mMap.getMyLocation();
-        LatLng latLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-        Log.d("DEBUG", "Start meeting called...");
-        serverAPI.startMeeting(editText.getText().toString(), latLng, userInfo.m_username, organizationEditText.getText().toString());
+        if (currentLocation != null) {
+            LatLng latLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+            Log.d("DEBUG", "Start meeting called...");
+            serverAPI.startMeeting(editText.getText().toString(), latLng, userInfo.m_username, organizationEditText.getText().toString());
+        }
     }
 
     @Override

@@ -108,7 +108,8 @@
             android:layout_gravity="center"
             android:onClick="askEndMeeting"
             android:text="end meeting"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:id="@+id/endMeeting"/>
     </LinearLayout>
 
 
