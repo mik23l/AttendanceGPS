@@ -1,5 +1,7 @@
 package com.example.desve.attendancegps;
 
+import android.util.Log;
+
 import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONArray;
@@ -34,16 +36,17 @@ public class MeetingInfo implements Serializable {
             lon = object.getDouble("lon");
             id = object.getString("id");
             startDate = object.getString("date");
+            org = object.getString("organization");
 
-            if (object.has("organization")) {
-                org = object.getString("organization");
-            }
+//            if (object.has("organization")) {
+//            }
 
             if (object.has("users")) {
-                List<String> users = new ArrayList<>();
+                users = new ArrayList<>();
                 JSONArray jsonArray = (JSONArray) object.get("users");
-                for (int j=0; j<jsonArray.length(); j++)
+                for (int j = 0; j < jsonArray.length(); j++)
                     users.add(jsonArray.getString(j));
+                Log.d("DEBUG", "UserInfo = " + users);
             }
 
         } catch (JSONException e) {
@@ -113,7 +116,7 @@ public class MeetingInfo implements Serializable {
     }
 
     public LatLng getCoor() {
-        return new LatLng(lat,lon);
+        return new LatLng(lat, lon);
     }
 
     public String getOrg() {
