@@ -94,7 +94,7 @@ public class WelcomeActivity extends AppCompatActivity implements Response.Liste
 
             }
             else {
-                JSONObject jsonObject = new JSONObject(response);
+                final JSONObject jsonObject = new JSONObject(response);
                 Log.d("DEBUG", jsonObject.toString());
                 hostButton.setAlpha(.5f);
                 hostButton.setClickable(false);
@@ -103,6 +103,8 @@ public class WelcomeActivity extends AppCompatActivity implements Response.Liste
                 currentMeeting.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
                         Intent myIntent = new Intent(WelcomeActivity.this, HostDetailsActivity.class);
+                        MeetingInfo meetingInfo = new MeetingInfo(jsonObject);
+                        myIntent.putExtra("MEETING", meetingInfo);
                         WelcomeActivity.this.startActivity(myIntent);
                     }
                 });
@@ -113,8 +115,6 @@ public class WelcomeActivity extends AppCompatActivity implements Response.Liste
                         ViewGroup.LayoutParams.WRAP_CONTENT,
                         ViewGroup.LayoutParams.WRAP_CONTENT));
                 layout.addView(currentMeeting);
-
-
             }
 
         } catch (JSONException e) {

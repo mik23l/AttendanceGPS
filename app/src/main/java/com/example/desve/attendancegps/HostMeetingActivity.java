@@ -74,8 +74,6 @@ public class HostMeetingActivity extends FragmentActivity implements GoogleMap.O
         LatLng latLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
         Log.d("DEBUG", "Start meeting called...");
         serverAPI.startMeeting(editText.getText().toString(), latLng, userInfo.m_username, organizationEditText.getText().toString());
-
-
     }
 
     @Override
@@ -152,7 +150,9 @@ public class HostMeetingActivity extends FragmentActivity implements GoogleMap.O
                 Toast.makeText(getApplicationContext(), "Already own an active meeting. End your previous meeting to start another!", Toast.LENGTH_LONG).show();
             }
             else {
+                MeetingInfo meetingInfo = new MeetingInfo(jsonObject);
                 Intent myIntent = new Intent(HostMeetingActivity.this, HostDetailsActivity.class);
+                myIntent.putExtra("MEETING", meetingInfo);
                 HostMeetingActivity.this.startActivity(myIntent);
             }
 

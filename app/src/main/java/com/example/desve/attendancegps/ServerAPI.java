@@ -20,6 +20,7 @@ public class ServerAPI {
     NewUserActivity newUserActivity;
     JoinMeetingActivity joinMeetingActivity;
     HostMeetingActivity hostMeetingActivity;
+    HostDetailsActivity hostDetailsActivity;
     JoinDetailsActivity joinDetailsActivity;
     WelcomeActivity welcomeActivity;
 
@@ -28,6 +29,11 @@ public class ServerAPI {
     public ServerAPI(JoinDetailsActivity ma) {
         joinDetailsActivity = ma;
         queue = Volley.newRequestQueue(joinDetailsActivity);
+    }
+
+    public ServerAPI(HostDetailsActivity ma) {
+        hostDetailsActivity = ma;
+        queue = Volley.newRequestQueue(hostDetailsActivity);
     }
 
     public ServerAPI(JoinMeetingActivity ma) {
@@ -109,6 +115,12 @@ public class ServerAPI {
     public void getMeeting(String id) {
         Log.d("DEBUG", "ID = " + id);
         StringRequest request = new StringRequest(Request.Method.GET, getURL() + "meeting/" + id , joinDetailsActivity, joinDetailsActivity);
+        queue.add(request);
+    }
+
+    public void getMeeting2(String id) {
+        Log.d("DEBUG", "ID = " + id);
+        StringRequest request = new StringRequest(Request.Method.GET, getURL() + "meeting/" + id , hostDetailsActivity, hostDetailsActivity);
         queue.add(request);
     }
 }
