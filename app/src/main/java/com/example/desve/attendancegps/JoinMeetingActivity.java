@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Response;
@@ -49,7 +50,7 @@ public class JoinMeetingActivity extends FragmentActivity implements
     private GoogleMap mMap;
 
     Button button;
-
+    TextView noMeetingText;
     Spinner spinner;
     List<String> spinnerArray;
     ArrayAdapter<String> adapter;
@@ -64,10 +65,8 @@ public class JoinMeetingActivity extends FragmentActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_join_meeting);
 
-        Intent intent = getIntent();
-
         button = findViewById(R.id.join_submit_button);
-
+        noMeetingText = findViewById(R.id.noMeeting);
         spinner = findViewById(R.id.spinner);
         spinnerArray =  new ArrayList<>();
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, spinnerArray);
@@ -200,9 +199,13 @@ public class JoinMeetingActivity extends FragmentActivity implements
 
             if (list.length() == 0) {
                 button.setEnabled(false);
+                spinner.setVisibility(View.INVISIBLE);
+                noMeetingText.setVisibility(View.VISIBLE);
             }
             else {
                 button.setEnabled(true);
+                spinner.setVisibility(View.VISIBLE);
+                noMeetingText.setVisibility(View.INVISIBLE);
             }
 
 
