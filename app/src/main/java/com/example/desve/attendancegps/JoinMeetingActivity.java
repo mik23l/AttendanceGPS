@@ -87,12 +87,17 @@ public class JoinMeetingActivity extends FragmentActivity implements
     }
 
     public void onJoinMeeting (View view) {
+        Log.d("DEBUG", "selected item = " + spinner.getSelectedItem());
+        if (spinner.getSelectedItem() != null) {
+            String selectedMeeting = spinner.getSelectedItem().toString();
 
-        String selectedMeeting = spinner.getSelectedItem().toString();
-
-        Intent myIntent = new Intent(JoinMeetingActivity.this, JoinDetailsActivity.class);
-        myIntent.putExtra("MEETING", meetingInfoHashMap.get(selectedMeeting));
-        startActivity(myIntent);
+            Intent myIntent = new Intent(JoinMeetingActivity.this, JoinDetailsActivity.class);
+            myIntent.putExtra("MEETING", meetingInfoHashMap.get(selectedMeeting));
+            startActivity(myIntent);
+        }
+        else {
+            Toast.makeText(this, "No Meetings Available", Toast.LENGTH_SHORT);
+        }
     }
 
     @Override
@@ -180,16 +185,25 @@ public class JoinMeetingActivity extends FragmentActivity implements
 
             JSONArray list = jsonObject.optJSONArray("nearby");
 
+            Log.d("DEBUG", "Num meetings = " + list.length());
             for (int i = 0; i < list.length(); i++) {
                 JSONObject meeting = list.optJSONObject(i);
                 MeetingInfo m = new MeetingInfo(meeting);
                 meetingInfoHashMap.put(m.getName(), m);
                 spinnerArray.add(m.getName());
+                Log.d("DEBUG", "NAME = " + m.getName());
                 meetingCoordinates.add(m.getCoor());
             }
 
             spinner.setAdapter(adapter);
             addMarkers();
+
+            if (list.length() == 0) {
+                button.setEnabled(false);
+            }
+            else {
+                button.setEnabled(true);
+            }
 
 
         } catch (JSONException e) {
