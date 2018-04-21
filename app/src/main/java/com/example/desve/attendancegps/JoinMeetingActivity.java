@@ -182,33 +182,10 @@ public class JoinMeetingActivity extends FragmentActivity implements
 
             for (int i = 0; i < list.length(); i++) {
                 JSONObject meeting = list.optJSONObject(i);
-                String name = meeting.getString("name");
-                Double lat = meeting.getDouble("lat");
-                Double lon = meeting.getDouble("lon");
-                LatLng latLng = new LatLng(lat, lon);
-                String id = meeting.getString("id");
-                Log.d("DEBUG", "ID 1 = " + id);
-
-                MeetingInfo m = new MeetingInfo(id, name);
-                // TODO add more info
-                if (meeting.has("organization")) {
-                    m.setOrg(meeting.getString("organization"));
-                }
-                m.setOwner(meeting.getString("owner"));
-                m.setStartDate(meeting.getString("date"));
-
-                if (meeting.has("users")) {
-                    List<String> users = new ArrayList<>();
-                    JSONArray jsonArray = (JSONArray) meeting.get("users");
-                    for (int j=0; j<jsonArray.length(); j++)
-                        users.add(jsonArray.getString(j));
-                    m.setUsers(users);
-                    Log.d("debug", "" + meeting.getJSONArray("users"));
-                }
-
-                meetingInfoHashMap.put(name, m);
-                spinnerArray.add(name);
-                meetingCoordinates.add(latLng);
+                MeetingInfo m = new MeetingInfo(meeting);
+                meetingInfoHashMap.put(m.getName(), m);
+                spinnerArray.add(m.getName());
+                meetingCoordinates.add(m.getCoor());
             }
 
             spinner.setAdapter(adapter);

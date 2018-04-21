@@ -97,40 +97,40 @@ public class JoinDetailsActivity extends AppCompatActivity implements Response.L
 
     private void handleRefresh(JSONObject object) {
         Log.d("DEBUG", "handle refresh");
-        parseJSON(object);
+        meetingInfo = new MeetingInfo(object);
         updateUI();
         swipeRefreshLayout.setRefreshing(false);
     }
 
-    private void parseJSON(JSONObject object) {
-        try {
-            String name = object.getString("name");
-            Double lat = object.getDouble("lat");
-            Double lon = object.getDouble("lon");
-            LatLng latLng = new LatLng(lat, lon);
-            String id = object.getString("id");
-            String start_time = object.getString("date");
-
-            meetingInfo.setOwner(object.getString("owner"));
-            meetingInfo.setStartDate(start_time);
-            // TODO add more info
-            if (object.has("organization")) {
-                meetingInfo.setOrg(object.getString("organization"));
-            }
-
-
-            if (object.has("users")) {
-                List<String> users = new ArrayList<>();
-                JSONArray jsonArray = (JSONArray) object.get("users");
-                for (int j=0; j<jsonArray.length(); j++)
-                    users.add(jsonArray.getString(j));
-                Log.d("DEBUG", "" + users);
-                meetingInfo.setUsers(users);
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
+//    private void parseJSON(JSONObject object) {
+//        try {
+//            String name = object.getString("name");
+//            Double lat = object.getDouble("lat");
+//            Double lon = object.getDouble("lon");
+//            LatLng latLng = new LatLng(lat, lon);
+//            String id = object.getString("id");
+//            String start_time = object.getString("date");
+//
+//            meetingInfo.setOwner(object.getString("owner"));
+//            meetingInfo.setStartDate(start_time);
+//            // TODO add more info
+//            if (object.has("organization")) {
+//                meetingInfo.setOrg(object.getString("organization"));
+//            }
+//
+//
+//            if (object.has("users")) {
+//                List<String> users = new ArrayList<>();
+//                JSONArray jsonArray = (JSONArray) object.get("users");
+//                for (int j=0; j<jsonArray.length(); j++)
+//                    users.add(jsonArray.getString(j));
+//                Log.d("DEBUG", "" + users);
+//                meetingInfo.setUsers(users);
+//            }
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     @Override
     public void onErrorResponse(VolleyError error) {

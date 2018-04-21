@@ -1,8 +1,15 @@
 package com.example.desve.attendancegps;
 
+import android.util.Log;
+
 import com.google.android.gms.maps.model.LatLng;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,17 +29,42 @@ public class MeetingInfo implements Serializable {
 
     String org;
 
+    public MeetingInfo(JSONObject object) {
+        try {
+            name = object.getString("name");
+            Double lat = object.getDouble("lat");
+            Double lon = object.getDouble("lon");
+            id = object.getString("id");
+            startDate = object.getString("date");
+            coor   = new LatLng(lat, lon);
+
+            if (object.has("organization")) {
+                org = object.getString("organization");
+            }
+
+            if (object.has("users")) {
+                List<String> users = new ArrayList<>();
+                JSONArray jsonArray = (JSONArray) object.get("users");
+                for (int j=0; j<jsonArray.length(); j++)
+                    users.add(jsonArray.getString(j));
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public MeetingInfo(String id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     public String getOwner() {
         return owner;
     }
 
     public void setOwner(String owner) {
         this.owner = owner;
-    }
-
-    public MeetingInfo(String id, String name) {
-        this.id = id;
-        this.name = name;
     }
 
     public String getId() {
