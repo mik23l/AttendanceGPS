@@ -31,10 +31,10 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        usernameEditText = (EditText) findViewById(R.id.username_edit_text);
-        passwordEditText = (EditText) findViewById(R.id.password_edit_text);
-        submitButton     = (Button)   findViewById(R.id.submit_button);
-        newUserButton    = (Button)   findViewById(R.id.new_user_button);
+        usernameEditText = findViewById(R.id.username_edit_text);
+        passwordEditText = findViewById(R.id.password_edit_text);
+        submitButton     = findViewById(R.id.submit_button);
+        newUserButton    = findViewById(R.id.new_user_button);
 
         serverAPI = new ServerAPI (this);
         databaseManager = new DatabaseManager(this);

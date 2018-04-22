@@ -34,10 +34,10 @@ public class WelcomeActivity extends AppCompatActivity implements Response.Liste
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
 
-        hostButton = findViewById(R.id.host_button);
-        layout = (LinearLayout) findViewById(R.id.linear_layout);
+        hostButton  = findViewById(R.id.host_button);
+        layout      = findViewById(R.id.linear_layout);
+        welcomeText = findViewById(R.id.welcome_text);
 
-        welcomeText = (TextView) findViewById(R.id.welcome_text);
 
         databaseManager = new DatabaseManager(this);
         databaseManager.open();
@@ -71,8 +71,7 @@ public class WelcomeActivity extends AppCompatActivity implements Response.Liste
     // On sign out button clicked
     public void signOut(View view) {
         databaseManager.deleteAll();
-        Intent myIntent = new Intent(WelcomeActivity.this, MainActivity.class);
-        WelcomeActivity.this.startActivity(myIntent);
+        finish();
     }
 
     @Override
