@@ -23,7 +23,7 @@ public class WelcomeActivity extends AppCompatActivity implements Response.Liste
 
     DatabaseManager databaseManager;
 
-    ServerAPI       serverAPI;
+    ServerAPI serverAPI;
 
     Button hostButton;
     Button currentMeeting;
@@ -47,8 +47,7 @@ public class WelcomeActivity extends AppCompatActivity implements Response.Liste
         welcomeText.setText("Welcome, " + userInfo.m_username);
 
         serverAPI = new ServerAPI (this);
-        serverAPI.getMyActiveMeetings(userInfo.m_username);
-
+        serverAPI.getMyActiveMeetings(userInfo.m_id);
     }
 
     // On host meeting button clicked
@@ -89,6 +88,7 @@ public class WelcomeActivity extends AppCompatActivity implements Response.Liste
         try {
             Log.d("DEBUG","Checking for active meetings...");
             Log.d("DEBUG",response);
+
             if(response.equals("false")) {
 
             }

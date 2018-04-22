@@ -71,7 +71,9 @@ public class NewUserActivity extends AppCompatActivity implements Response.Liste
                 // Remove current user from local database
                 databaseManager.deleteAll();
                 // Insert new user into local database
-                databaseManager.insertUserInfo(jsonObject.getInt("id"), jsonObject.getString("username").toString(), jsonObject.getString("password").toString());
+                databaseManager.insertUserInfo(jsonObject.getString("id"),
+                        jsonObject.getString("username").toString(),
+                        jsonObject.getString("password").toString());
 
                 // Start welcome activity
                 Intent myIntent = new Intent(NewUserActivity.this, WelcomeActivity.class);

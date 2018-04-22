@@ -5,11 +5,11 @@ package com.example.desve.attendancegps;
  */
 
 public class UserInfo {
-    int m_id;
+    String m_id;
     String m_username;
     String m_password;
 
-    public UserInfo(int id, String username, String pass) {
+    public UserInfo(String id, String username, String pass) {
         m_id = id;
         m_username = username;
         m_password = pass;

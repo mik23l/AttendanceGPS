@@ -21,7 +21,7 @@ public class DBOpenHelper extends SQLiteOpenHelper {
     private static final String SQL_CREATE_ENTRIES =
             "CREATE TABLE " + TABLE_NAME + "(" +
                     COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    COLUMN_USERID + " INTEGER," +
+                    COLUMN_USERID + " TEXT," +
                     COLUMN_USERNAME + " TEXT," +
                     COLUMN_PASSWORD + " TEXT)";
 

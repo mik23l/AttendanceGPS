@@ -26,7 +26,7 @@ public class DatabaseManager {
         sqLiteDatabase.close();
     }
 
-    public void insertUserInfo(int idnum, String username, String password) {
+    public void insertUserInfo(String idnum, String username, String password) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(DBOpenHelper.COLUMN_USERID, idnum);
         contentValues.put(DBOpenHelper.COLUMN_USERNAME, username);
@@ -41,10 +41,10 @@ public class DatabaseManager {
                 null, null, null, null, null);
         cursor.moveToFirst();
         try {
-            UserInfo userInfo = new UserInfo(cursor.getInt(1), cursor.getString(2), cursor.getString(3));
+            UserInfo userInfo = new UserInfo(cursor.getString(1), cursor.getString(2), cursor.getString(3));
             return userInfo;
         } catch (RuntimeException e) {
-            return new UserInfo(-1, "", "");
+            return new UserInfo("", "", "");
         }
     }
 

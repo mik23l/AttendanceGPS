@@ -89,7 +89,9 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
                 // Remove current user from local database
                 databaseManager.deleteAll();
                 // Insert new user into local database
-                databaseManager.insertUserInfo(userObject.getInt("id"), userObject.getString("username").toString(), userObject.getString("password").toString());
+                databaseManager.insertUserInfo(userObject.getString("id"),
+                        userObject.getString("username").toString(),
+                        userObject.getString("password").toString());
 
                 // Start welcome activity
                 Intent myIntent = new Intent(MainActivity.this, WelcomeActivity.class);

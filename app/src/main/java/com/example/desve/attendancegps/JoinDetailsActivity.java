@@ -24,6 +24,7 @@ public class JoinDetailsActivity extends AppCompatActivity implements Response.L
     ServerAPI serverAPI;
     LinearLayout userLayout;
     SwipeRefreshLayout swipeRefreshLayout;
+    UserInfo userInfo;
 
     DatabaseManager databaseManager;
 
@@ -38,7 +39,7 @@ public class JoinDetailsActivity extends AppCompatActivity implements Response.L
 
         // Check if user already exists in the database and attempt to sign in
         databaseManager.open();
-        UserInfo userInfo = databaseManager.getUserFromDB();
+        userInfo = databaseManager.getUserFromDB();
 
         meetingName = findViewById(R.id.meeting_name);
         orgText = findViewById(R.id.organization);
@@ -52,7 +53,7 @@ public class JoinDetailsActivity extends AppCompatActivity implements Response.L
         Intent intent = getIntent();
         meetingInfo = (MeetingInfo) intent.getSerializableExtra("MEETING");
 
-        serverAPI.joinMeeting(String.valueOf(meetingInfo.getId()), userInfo.m_username);
+        serverAPI.joinMeeting(String.valueOf(meetingInfo.getId()), userInfo.m_id);
 
         meetingName.setText(meetingInfo.getName());
         updateUI();
