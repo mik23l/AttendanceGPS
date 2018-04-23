@@ -59,7 +59,8 @@ public class HostDetailsActivity extends AppCompatActivity implements Response.L
 
         swipeRefreshLayout.setOnRefreshListener(this);
         meetingName.setText(meetingInfo.getName());
-        updateUI();
+        onRefresh();
+//        updateUI();
     }
 
     public void askEndMeeting(View view) {
@@ -116,8 +117,8 @@ public class HostDetailsActivity extends AppCompatActivity implements Response.L
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        finish();
+//        super.onBackPressed();
+        finishActivity(HostMeetingActivity.DETAILS_CODE);
     }
 
     private void handleRefresh(JSONObject object) {

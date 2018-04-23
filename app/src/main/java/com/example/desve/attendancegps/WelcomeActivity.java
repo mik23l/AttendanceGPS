@@ -91,11 +91,12 @@ public class WelcomeActivity extends AppCompatActivity implements Response.Liste
             Log.d("DEBUG","Checking for active meetings...");
             Log.d("DEBUG",response);
 
-            if(response.equals("false")) {
+            final JSONObject jsonObject = new JSONObject(response);
 
+            if(jsonObject.has("NoActive")) {
+                Log.d("DEBUG", "No Current Meeting");
             }
             else {
-                final JSONObject jsonObject = new JSONObject(response);
                 Log.d("DEBUG", jsonObject.toString());
                 hostButton.setAlpha(.5f);
                 hostButton.setClickable(false);

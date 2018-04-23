@@ -33,6 +33,7 @@ public class HostMeetingActivity extends FragmentActivity implements GoogleMap.O
         GoogleMap.OnMyLocationClickListener,
         OnMapReadyCallback {
 
+    static final int DETAILS_CODE = 1;
     int MY_LOCATION_REQUEST_CODE = 99;
     private GoogleMap mMap;
 
@@ -150,6 +151,15 @@ public class HostMeetingActivity extends FragmentActivity implements GoogleMap.O
 
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == DETAILS_CODE) {
+            Log.d("DEBUG", "Ending host meeting actvity");
+            finish();
+        }
+    }
+
+    @Override
     public void onResponse(String response) {
         try {
             Log.d("DEBUG", "HostMeetingActivity");
@@ -164,6 +174,7 @@ public class HostMeetingActivity extends FragmentActivity implements GoogleMap.O
                 Intent myIntent = new Intent(HostMeetingActivity.this, HostDetailsActivity.class);
                 myIntent.putExtra("MEETING", meetingInfo);
                 HostMeetingActivity.this.startActivity(myIntent);
+                startActivityForResult(myIntent, DETAILS_CODE);
             }
 
         } catch (JSONException e) {
