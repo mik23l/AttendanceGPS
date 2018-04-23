@@ -46,6 +46,12 @@ public class HostMeetingActivity extends FragmentActivity implements GoogleMap.O
     UserInfo userInfo;
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_host_meeting);
