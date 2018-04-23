@@ -43,7 +43,8 @@
         <activity android:name=".JoinMeetingActivity" />
         <activity android:name=".HostMeetingActivity" />
         <activity android:name=".HostDetailsActivity" />
-        <activity android:name=".JoinDetailsActivity"></activity>
+        <activity android:name=".JoinDetailsActivity" />
+        <activity android:name=".AnalyticsActivity"></activity>
     </application>
 
 </manifest>
