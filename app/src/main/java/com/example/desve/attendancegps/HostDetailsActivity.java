@@ -96,6 +96,13 @@ public class HostDetailsActivity extends AppCompatActivity implements Response.L
             startText.setText("");
         }
 
+        if (!meetingInfo.getActive()) {
+            endMeetingButton.setVisibility(View.INVISIBLE);
+        }
+        else {
+            endMeetingButton.setVisibility(View.VISIBLE);
+        }
+
         Log.d("DEBUG", "USERS = " + meetingInfo.getUsers());
         if (meetingInfo.getUsers() != null) {
             userLayout.removeAllViews();
@@ -105,6 +112,12 @@ public class HostDetailsActivity extends AppCompatActivity implements Response.L
                 userLayout.addView(tv);
             }
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 
     private void handleRefresh(JSONObject object) {
@@ -121,6 +134,7 @@ public class HostDetailsActivity extends AppCompatActivity implements Response.L
 
     @Override
     public void onResponse(String response) {
+        Log.d("DEBUG", response);
         try {
             JSONObject jsonObject = new JSONObject(response);
             if (jsonObject.has("ended meeting")) {

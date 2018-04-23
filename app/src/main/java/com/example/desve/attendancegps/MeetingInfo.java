@@ -26,7 +26,7 @@ public class MeetingInfo implements Serializable {
     List<String> users;
     Double lat, lon;
     String owner;
-
+    Boolean active = false;
     String org;
 
     public MeetingInfo(JSONObject object) {
@@ -37,9 +37,7 @@ public class MeetingInfo implements Serializable {
             id = object.getString("id");
             startDate = object.getString("date");
             org = object.getString("organization");
-
-//            if (object.has("organization")) {
-//            }
+            active = object.getBoolean("active");
 
             if (object.has("users")) {
                 users = new ArrayList<>();
@@ -54,6 +52,10 @@ public class MeetingInfo implements Serializable {
         }
     }
 
+    public Boolean getActive() {
+        return active;
+    }
+
     public MeetingInfo(String id, String name) {
         this.id = id;
         this.name = name;
@@ -61,10 +63,6 @@ public class MeetingInfo implements Serializable {
 
     public String getOwner() {
         return owner;
-    }
-
-    public void setOwner(String owner) {
-        this.owner = owner;
     }
 
     public String getId() {
@@ -87,32 +85,8 @@ public class MeetingInfo implements Serializable {
         return startDate;
     }
 
-    public void setStartDate(String startDate) {
-        this.startDate = startDate;
-    }
-
-    public String getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(String endDate) {
-        this.endDate = endDate;
-    }
-
-    public String getDuration() {
-        return duration;
-    }
-
-    public void setDuration(String duration) {
-        this.duration = duration;
-    }
-
     public List<String> getUsers() {
         return users;
-    }
-
-    public void setUsers(List<String> users) {
-        this.users = users;
     }
 
     public LatLng getCoor() {
