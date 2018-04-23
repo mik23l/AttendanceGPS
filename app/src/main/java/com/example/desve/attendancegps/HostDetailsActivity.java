@@ -62,7 +62,6 @@ public class HostDetailsActivity extends AppCompatActivity implements Response.L
 
         swipeRefreshLayout.setOnRefreshListener(this);
         meetingName.setText(meetingInfo.getName());
-//        updateUI();
     }
 
     public void askEndMeeting(View view) {
@@ -159,8 +158,8 @@ public class HostDetailsActivity extends AppCompatActivity implements Response.L
 
     public void onExitPage(View view) {
         Log.d("DEBUG", "HostDetails : onExitPage");
+        setResult(RESULT_OK);
         finish();
-        return;
     }
 
     @Override

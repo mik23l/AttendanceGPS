@@ -73,10 +73,12 @@ public class WelcomeActivity extends AppCompatActivity implements Response.Liste
 
             Log.d("DEBUG", "meeting info = " + meetingInfo);
 
-            Intent myIntent = new Intent(this, HostDetailsActivity.class);
-            myIntent.putExtra("MEETING", meetingInfo);
-            startActivity(myIntent);
-            startActivityForResult(myIntent, HOST_DETAILS);
+            if (meetingInfo != null) {
+                Intent myIntent = new Intent(this, HostDetailsActivity.class);
+                myIntent.putExtra("MEETING", meetingInfo);
+                startActivityForResult(myIntent, HOST_DETAILS);
+            }
+
         }
         else if (requestCode == HOST_DETAILS && resultCode == RESULT_OK) {
             Log.d("DEBUG", "Welcome : result host details");
@@ -145,10 +147,11 @@ public class WelcomeActivity extends AppCompatActivity implements Response.Liste
                     currentMeeting = new Button(this);
                     currentMeeting.setOnClickListener(new View.OnClickListener() {
                         public void onClick(View v) {
+                            Log.d("DEBUG", "Starting HostDetails from CurrentMeeting");
                             Intent myIntent = new Intent(WelcomeActivity.this, HostDetailsActivity.class);
                             MeetingInfo meetingInfo = new MeetingInfo(jsonObject);
                             myIntent.putExtra("MEETING", meetingInfo);
-                            WelcomeActivity.this.startActivity(myIntent);
+                            WelcomeActivity.this.startActivityForResult(myIntent, HOST_DETAILS);
                         }
                     });
                     currentMeeting.setText("Current Meeting");
