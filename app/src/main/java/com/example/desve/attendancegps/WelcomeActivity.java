@@ -29,6 +29,10 @@ public class WelcomeActivity extends AppCompatActivity implements Response.Liste
     Button currentMeeting;
     LinearLayout layout;
 
+    // RESULTS CODES
+    static final int HOST_MEETING = 1;
+    static final int HOST_DETAILS = 2;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,10 +54,31 @@ public class WelcomeActivity extends AppCompatActivity implements Response.Liste
         serverAPI.getMyActiveMeetings(userInfo.m_id);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == HOST_MEETING && resultCode == RESULT_OK) {
+            Log.d("DEBUG", "Welcome : result host meeting");
+
+            MeetingInfo meetingInfo = (MeetingInfo) data.getExtras().getSerializable("MEETING");
+
+            Log.d("DEBUG", "meeting info = " + meetingInfo);
+
+            Intent myIntent = new Intent(this, HostDetailsActivity.class);
+            myIntent.putExtra("MEETING", meetingInfo);
+            startActivity(myIntent);
+            startActivityForResult(myIntent, HOST_DETAILS);
+        }
+        else if (requestCode == HOST_DETAILS && resultCode == RESULT_OK) {
+            Log.d("DEBUG", "Welcome : result host details");
+        }
+    }
+
     // On host meeting button clicked
     public void hostMeeting(View view) {
         Intent myIntent = new Intent(WelcomeActivity.this, HostMeetingActivity.class);
-        WelcomeActivity.this.startActivity(myIntent);
+//        WelcomeActivity.this.startActivity(myIntent);
+        startActivityForResult(myIntent, HOST_MEETING);
     }
 
     // On join meeting button clicked
