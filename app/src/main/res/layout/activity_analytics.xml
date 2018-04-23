@@ -70,11 +70,6 @@
                             android:text="Duration"
                             android:textSize="15dp"
                             android:textStyle="bold" />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:textStyle="bold"
-                            android:textSize="15dp"
-                            android:text="# of Attendees"/>
                     </TableRow>
                     <TableRow>
                         <TextView
@@ -178,6 +173,32 @@
             </HorizontalScrollView>
 
         </ScrollView>
+        
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp">
+            <TableRow>
+                <TextView
+                    android:layout_width="176dp"
+                    android:text="Average # of Attendees:"
+                    android:textSize="15dp"
+                    android:textStyle="bold" />
+                <TextView
+                    android:textSize="15dp"
+                    android:id="@+id/avg_attend"/>
+            </TableRow>
+            <TableRow>
+                <TextView
+                    android:layout_width="176dp"
+                    android:text="Average Duration:"
+                    android:textSize="15dp"
+                    android:textStyle="bold" />
+                <TextView
+                    android:textSize="15dp"
+                    android:id="@+id/avg_duration"/>
+            </TableRow>
+        </TableLayout>
 
     </LinearLayout>
 
