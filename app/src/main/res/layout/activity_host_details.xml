@@ -17,9 +17,9 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_marginTop="10dp"
+            android:layout_weight="1"
             android:background="@drawable/customborder"
-            android:orientation="vertical"
-            android:layout_weight="1">
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/meeting_name"
@@ -70,8 +70,8 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_marginTop="5dp"
-            android:background="@drawable/customborder"
-            android:layout_weight="111">
+            android:layout_weight="111"
+            android:background="@drawable/customborder">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -102,14 +102,29 @@
         </android.support.v4.widget.NestedScrollView>
 
 
-        <Button
-            android:layout_width="250dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:onClick="askEndMeeting"
-            android:text="end meeting"
-            android:layout_weight="1"
-            android:id="@+id/endMeeting"/>
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_weight="1">
+
+            <Button
+                android:id="@+id/endMeeting"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:onClick="askEndMeeting"
+                android:text="end meeting" />
+
+            <Button
+                android:id="@+id/exitPage"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:onClick="onExitPage"
+                android:text="exit page" />
+        </LinearLayout>
     </LinearLayout>
 
 

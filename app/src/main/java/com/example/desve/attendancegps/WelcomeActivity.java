@@ -28,6 +28,7 @@ public class WelcomeActivity extends AppCompatActivity implements Response.Liste
     Button hostButton;
     Button currentMeeting;
     LinearLayout layout;
+    UserInfo userInfo;
 
     // RESULTS CODES
     static final int HOST_MEETING = 1;
@@ -47,7 +48,7 @@ public class WelcomeActivity extends AppCompatActivity implements Response.Liste
         databaseManager.open();
 
         // Get username from database and set welcome message
-        UserInfo userInfo = databaseManager.getUserFromDB();
+        userInfo = databaseManager.getUserFromDB();
         welcomeText.setText("Welcome, " + userInfo.m_username);
 
         serverAPI = new ServerAPI (this);
@@ -55,7 +56,15 @@ public class WelcomeActivity extends AppCompatActivity implements Response.Liste
     }
 
     @Override
+    protected void onResume() {
+        Log.d("DEBUG", "WelcomeActivity : OnResume");
+        serverAPI.getMyActiveMeetings(userInfo.m_id);
+        super.onResume();
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d("DEBUG", "WelcomeActivity : OnActivityResult");
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == HOST_MEETING && resultCode == RESULT_OK) {
             Log.d("DEBUG", "Welcome : result host meeting");
@@ -120,28 +129,36 @@ public class WelcomeActivity extends AppCompatActivity implements Response.Liste
 
             if(jsonObject.has("NoActive")) {
                 Log.d("DEBUG", "No Current Meeting");
+                if (currentMeeting != null) {
+                    layout.removeView(currentMeeting);
+                    currentMeeting = null;
+                }
+                hostButton.setAlpha(1);
+                hostButton.setClickable(true);
             }
             else {
                 Log.d("DEBUG", jsonObject.toString());
                 hostButton.setAlpha(.5f);
                 hostButton.setClickable(false);
 
-                currentMeeting = new Button(this);
-                currentMeeting.setOnClickListener(new View.OnClickListener() {
-                    public void onClick(View v) {
-                        Intent myIntent = new Intent(WelcomeActivity.this, HostDetailsActivity.class);
-                        MeetingInfo meetingInfo = new MeetingInfo(jsonObject);
-                        myIntent.putExtra("MEETING", meetingInfo);
-                        WelcomeActivity.this.startActivity(myIntent);
-                    }
-                });
-                currentMeeting.setText("Current Meeting");
-                currentMeeting.setTextColor(Color.WHITE);
-                currentMeeting.setBackgroundColor(Color.RED);
-                currentMeeting.setLayoutParams(new ViewGroup.LayoutParams(
-                        ViewGroup.LayoutParams.WRAP_CONTENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT));
-                layout.addView(currentMeeting);
+                if (currentMeeting == null) {
+                    currentMeeting = new Button(this);
+                    currentMeeting.setOnClickListener(new View.OnClickListener() {
+                        public void onClick(View v) {
+                            Intent myIntent = new Intent(WelcomeActivity.this, HostDetailsActivity.class);
+                            MeetingInfo meetingInfo = new MeetingInfo(jsonObject);
+                            myIntent.putExtra("MEETING", meetingInfo);
+                            WelcomeActivity.this.startActivity(myIntent);
+                        }
+                    });
+                    currentMeeting.setText("Current Meeting");
+                    currentMeeting.setTextColor(Color.WHITE);
+                    currentMeeting.setBackgroundColor(Color.RED);
+                    currentMeeting.setLayoutParams(new ViewGroup.LayoutParams(
+                            ViewGroup.LayoutParams.WRAP_CONTENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT));
+                    layout.addView(currentMeeting);
+                }
             }
 
         } catch (JSONException e) {

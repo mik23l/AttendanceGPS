@@ -35,6 +35,8 @@ public class HostDetailsActivity extends AppCompatActivity implements Response.L
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d("DEBUG", "HostDetails : OnCreate");
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_host_details);
 
@@ -78,6 +80,7 @@ public class HostDetailsActivity extends AppCompatActivity implements Response.L
     }
 
     private void updateUI() {
+        Log.d("DEBUG", "HostDetails : UPdateUI");
         if (meetingInfo.getOrg() != null) {
             Log.d("DEBUG", "ORG = " + meetingInfo.getOrg());
             orgText.setText("Organization: " + meetingInfo.getOrg());
@@ -129,6 +132,7 @@ public class HostDetailsActivity extends AppCompatActivity implements Response.L
 
     @Override
     public void onResponse(String response) {
+        Log.d("DEBUG", "HostDetails : OnResponse");
         Log.d("DEBUG", response);
         try {
             JSONObject jsonObject = new JSONObject(response);
@@ -149,7 +153,20 @@ public class HostDetailsActivity extends AppCompatActivity implements Response.L
 
     @Override
     public void onRefresh() {
-        Log.d("DEBUG", "refreshing");
+        Log.d("DEBUG", "onRefresh");
         serverAPI.getMeeting2(meetingInfo.getId());
+    }
+
+    public void onExitPage(View view) {
+        Log.d("DEBUG", "HostDetails : onExitPage");
+        finish();
+        return;
+    }
+
+    @Override
+    public void finish() {
+        Log.d("DEBUG", "host details finish called");
+        setResult(RESULT_OK);
+        super.finish();
     }
 }
