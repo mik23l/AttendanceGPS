@@ -41,10 +41,11 @@ public class HostDetailsActivity extends AppCompatActivity implements Response.L
         meetingInfo = (MeetingInfo) getIntent().getSerializableExtra("MEETING");
 
         serverAPI = new ServerAPI(this);
+        serverAPI.getMeeting2(meetingInfo.getId());
 
-        databaseManager = new DatabaseManager(this);
 
         // Check if user already exists in the database and attempt to sign in
+        databaseManager = new DatabaseManager(this);
         databaseManager.open();
         userInfo = databaseManager.getUserFromDB();
         databaseManager.close();
@@ -59,7 +60,6 @@ public class HostDetailsActivity extends AppCompatActivity implements Response.L
 
         swipeRefreshLayout.setOnRefreshListener(this);
         meetingName.setText(meetingInfo.getName());
-        onRefresh();
 //        updateUI();
     }
 
@@ -113,12 +113,6 @@ public class HostDetailsActivity extends AppCompatActivity implements Response.L
                 userLayout.addView(tv);
             }
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-//        super.onBackPressed();
-        finishActivity(HostMeetingActivity.DETAILS_CODE);
     }
 
     private void handleRefresh(JSONObject object) {

@@ -45,6 +45,7 @@ public class HostMeetingActivity extends FragmentActivity implements GoogleMap.O
 
     DatabaseManager databaseManager;
     UserInfo userInfo;
+    MeetingInfo meetingInfo;
 
     @Override
     public void onBackPressed() {
@@ -150,13 +151,23 @@ public class HostMeetingActivity extends FragmentActivity implements GoogleMap.O
     }
 
 
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if (requestCode == DETAILS_CODE) {
+//            Log.d("DEBUG", "Ending host meeting actvity");
+//            finish();
+//        }
+//    }
+
+
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == DETAILS_CODE) {
-            Log.d("DEBUG", "Ending host meeting actvity");
-            finish();
-        }
+    public void finish() {
+        Log.d("DEBUG", "Finishing host activity");
+        Intent intent = new Intent();
+        intent.putExtra("MEETING", meetingInfo);
+        setResult(RESULT_OK, intent);
+        super.finish();
     }
 
     @Override
@@ -170,11 +181,13 @@ public class HostMeetingActivity extends FragmentActivity implements GoogleMap.O
                 Toast.makeText(getApplicationContext(), "Already own an active meeting. End your previous meeting to start another!", Toast.LENGTH_LONG).show();
             }
             else {
-                MeetingInfo meetingInfo = new MeetingInfo(jsonObject);
-                Intent myIntent = new Intent(HostMeetingActivity.this, HostDetailsActivity.class);
-                myIntent.putExtra("MEETING", meetingInfo);
-                HostMeetingActivity.this.startActivity(myIntent);
-                startActivityForResult(myIntent, DETAILS_CODE);
+                meetingInfo = new MeetingInfo(jsonObject);
+//                Intent myIntent = new Intent(HostMeetingActivity.this, HostDetailsActivity.class);
+//                myIntent.putExtra("MEETING", meetingInfo);
+//                HostMeetingActivity.this.startActivity(myIntent);
+//                startActivityForResult(myIntent, DETAILS_CODE);
+                Log.d("DEBUG", "calling finish host");
+                finish();
             }
 
         } catch (JSONException e) {
