@@ -1,84 +1,184 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.desve.attendancegps.AnalyticsActivity">
 
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <LinearLayout
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Meetings Attended:"
+            android:textSize="20sp" />
+        <TableLayout
             android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TableRow>
+
+                <TextView
+                    android:layout_width="63dp"
+                    android:text="Filter:"
+                    android:textSize="15sp" />
+
+                <Spinner
+                    android:id="@+id/attend_filter"
+                    android:layout_width="148dp"></Spinner>
+            </TableRow>
+        </TableLayout>
+        <ScrollView
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:scrollbars="horizontal"
+            android:layout_width="match_parent"
+            android:scrollbarStyle="outsideInset"
+            android:fillViewport="true">
 
-            <TextView
-                android:layout_width="wrap_content"
+            <HorizontalScrollView
                 android:layout_height="wrap_content"
-                android:text="Meetings Hosted:"
-                android:textSize="20sp" />
+                android:scrollbars="horizontal"
+                android:layout_width="wrap_content">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
                 <TableLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/hosted_table">
+                    android:id="@+id/attend_table" >
+                    <TableRow>
+
+                        <TextView
+                            android:layout_width="112dp"
+                            android:text="Name"
+                            android:textSize="15dp"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:layout_width="105dp"
+                            android:text="Organization"
+                            android:textSize="15dp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="89dp"
+                            android:text="Date"
+                            android:textSize="15dp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="104dp"
+                            android:text="Duration"
+                            android:textSize="15dp"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:textStyle="bold"
+                            android:textSize="15dp"
+                            android:text="# of Attendees"/>
+                    </TableRow>
                     <TableRow>
                         <TextView
-                            android:layout_width="131dp"
-                            android:text="Meeting Name" />
+                            android:text="Meeting 3"/>
                         <TextView
-                            android:layout_width="73dp"
-                            android:text="Date" />
+                            android:text="CS"/>
                         <TextView
-                            android:layout_width="79dp"
-                            android:text="Duration" />
+                            android:text="4/23/2018"/>
                         <TextView
-                            android:text="# Attendees"/>
+                            android:text="2 hr 30 min"/>
                     </TableRow>
+
                 </TableLayout>
-            </LinearLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:text="Meetings Attended:"
-                android:textSize="20sp" />
+            </HorizontalScrollView>
+        </ScrollView>
 
-            <LinearLayout
-                android:layout_width="match_parent"
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Meetings Hosted:"
+            android:textSize="20sp" />
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TableRow>
+
+                <TextView
+                    android:layout_width="63dp"
+                    android:text="Filter:"
+                    android:textSize="15sp" />
+
+                <Spinner
+                    android:id="@+id/host_filter"
+                    android:layout_width="148dp"></Spinner>
+            </TableRow>
+        </TableLayout>
+
+        <ScrollView
+            android:layout_height="match_parent"
+            android:scrollbars="horizontal"
+            android:layout_width="match_parent"
+            android:scrollbarStyle="outsideInset"
+            android:fillViewport="true">
+
+            <HorizontalScrollView
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:scrollbars="horizontal"
+                android:layout_width="wrap_content">
+
                 <TableLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/attended_table">
+                    android:id="@+id/host_table" >
+                    <TableRow>
+
+                        <TextView
+                            android:layout_width="112dp"
+                            android:text="Name"
+                            android:textSize="15dp"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:layout_width="105dp"
+                            android:text="Organization"
+                            android:textSize="15dp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="89dp"
+                            android:text="Date"
+                            android:textSize="15dp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="104dp"
+                            android:text="Duration"
+                            android:textSize="15dp"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:textStyle="bold"
+                            android:textSize="15dp"
+                            android:text="# of Attendees"/>
+                    </TableRow>
                     <TableRow>
                         <TextView
-                            android:layout_width="131dp"
-                            android:text="Meeting Name" />
+                            android:text="Meeting 1"/>
                         <TextView
-                            android:layout_width="73dp"
-                            android:text="Date" />
+                            android:text="CS"/>
                         <TextView
-                            android:layout_width="79dp"
-                            android:text="Duration" />
+                            android:text="4/23/2018"/>
                         <TextView
-                            android:text="# Attendees"/>
+                            android:text="30 minutes"/>
+                        <TextView
+                            android:text="56"/>
                     </TableRow>
+
                 </TableLayout>
 
-            </LinearLayout>
+            </HorizontalScrollView>
 
-        </LinearLayout>
+        </ScrollView>
 
-    </ScrollView>
+    </LinearLayout>
 
-</RelativeLayout>
+</ScrollView>
