@@ -19,6 +19,7 @@ public class NewUserActivity extends AppCompatActivity implements Response.Liste
     EditText usernameEditText;
     EditText passwordEditText;
     EditText reenterEditText;
+    EditText personName;
 
     ServerAPI serverAPI;
     DatabaseManager databaseManager;
@@ -28,9 +29,10 @@ public class NewUserActivity extends AppCompatActivity implements Response.Liste
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_user);
 
-        usernameEditText = (EditText) findViewById(R.id.new_username_edit_text);
-        passwordEditText = (EditText) findViewById(R.id.new_password_edit_text);
-        reenterEditText = (EditText) findViewById(R.id.new_reenter_password_edit_text);
+        usernameEditText = findViewById(R.id.new_username_edit_text);
+        passwordEditText = findViewById(R.id.new_password_edit_text);
+        reenterEditText = findViewById(R.id.new_reenter_password_edit_text);
+        personName = findViewById(R.id.name_edit_text);
 
         serverAPI = new ServerAPI(this);
 
@@ -42,7 +44,10 @@ public class NewUserActivity extends AppCompatActivity implements Response.Liste
     public void onCreateUser(View view) {
 
         // Check if username and password are blank
-        if(!TextUtils.isEmpty(usernameEditText.getText()) && !TextUtils.isEmpty(passwordEditText.getText()) && !TextUtils.isEmpty(reenterEditText.getText())) {
+        if(!TextUtils.isEmpty(usernameEditText.getText()) &&
+                !TextUtils.isEmpty(passwordEditText.getText()) &&
+                !TextUtils.isEmpty(reenterEditText.getText()) &&
+                !TextUtils.isEmpty(personName.getText())) {
 
             // Check if passwords match
             if(!passwordEditText.getText().toString().equals(reenterEditText.getText().toString())) {
@@ -51,7 +56,9 @@ public class NewUserActivity extends AppCompatActivity implements Response.Liste
             }
 
             // Make request to database to create new user
-            serverAPI.createNewUser(usernameEditText.getText().toString(), passwordEditText.getText().toString());
+            serverAPI.createNewUser(usernameEditText.getText().toString(),
+                    passwordEditText.getText().toString(),
+                    personName.getText().toString());
         }
         else {
             Toast.makeText(getApplicationContext(), "One or more field left blank!", Toast.LENGTH_LONG).show();
@@ -72,8 +79,8 @@ public class NewUserActivity extends AppCompatActivity implements Response.Liste
                 databaseManager.deleteAll();
                 // Insert new user into local database
                 databaseManager.insertUserInfo(jsonObject.getString("id"),
-                        jsonObject.getString("username").toString(),
-                        jsonObject.getString("password").toString());
+                        jsonObject.getString("username"),
+                        jsonObject.getString("password"));
 
                 // Start welcome activity
                 Intent myIntent = new Intent(NewUserActivity.this, WelcomeActivity.class);

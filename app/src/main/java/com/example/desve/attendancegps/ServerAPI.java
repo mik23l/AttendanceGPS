@@ -89,12 +89,16 @@ public class ServerAPI {
         }
     }
 
-    public void createNewUser(String username, String password) {
+    public void createNewUser(String username, String password, String name) {
         try {
             // Encode parameters that may contain spaces
             String username_encoded = URLEncoder.encode(username, "UTF-8");
             String password_encoded = URLEncoder.encode(password, "UTF-8");
-            StringRequest request = new StringRequest(Request.Method.GET, getURL() + "user/add?user=" + username_encoded + "&pass=" + password_encoded, newUserActivity, newUserActivity);
+            String name_encoded = URLEncoder.encode(name, "UTF-8");
+            StringRequest request = new StringRequest(Request.Method.GET, getURL() +
+                    "user/add?user=" + username_encoded +
+                    "&pass=" + password_encoded + "&name=" + name_encoded,
+                    newUserActivity, newUserActivity);
             queue.add(request);
 
         } catch (UnsupportedEncodingException e) {
