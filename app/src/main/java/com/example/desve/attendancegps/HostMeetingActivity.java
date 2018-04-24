@@ -122,7 +122,7 @@ public class HostMeetingActivity extends FragmentActivity implements GoogleMap.O
             mMap.setMapStyle(
                     MapStyleOptions.loadRawResourceStyle(
                             this, R.raw.style_json));
-            
+
         } else {
             // Show rationale and request permission.
             ActivityCompat.requestPermissions(this, new String[] {
