@@ -33,6 +33,9 @@ public class WelcomeActivity extends AppCompatActivity implements Response.Liste
     // RESULTS CODES
     static final int HOST_MEETING = 1;
     static final int HOST_DETAILS = 2;
+    static final int JOIN_MEETING = 3;
+    static final int JOIN_DETAILS = 4;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +86,21 @@ public class WelcomeActivity extends AppCompatActivity implements Response.Liste
         else if (requestCode == HOST_DETAILS && resultCode == RESULT_OK) {
             Log.d("DEBUG", "Welcome : result host details");
         }
+        else if (requestCode == JOIN_MEETING && resultCode == RESULT_OK) {
+            Log.d("DEBUG", "Welcome : result join meeting");
+            MeetingInfo meetingInfo = (MeetingInfo) data.getExtras().getSerializable("MEETING");
+
+            Log.d("DEBUG", "meeting info = " + meetingInfo);
+
+            if (meetingInfo != null) {
+                Intent myIntent = new Intent(this, JoinDetailsActivity.class);
+                myIntent.putExtra("MEETING", meetingInfo);
+                startActivityForResult(myIntent, JOIN_DETAILS);
+            }
+        }
+        else if (requestCode == JOIN_DETAILS && resultCode == RESULT_OK) {
+            Log.d("DEBUG", "Welcome : result join details");
+        }
     }
 
     // On host meeting button clicked
@@ -95,7 +113,7 @@ public class WelcomeActivity extends AppCompatActivity implements Response.Liste
     // On join meeting button clicked
     public void joinMeeting(View view) {
         Intent myIntent = new Intent(WelcomeActivity.this, JoinMeetingActivity.class);
-        WelcomeActivity.this.startActivity(myIntent);
+        startActivityForResult(myIntent, JOIN_MEETING);
     }
 
     // On analytics button clicked
