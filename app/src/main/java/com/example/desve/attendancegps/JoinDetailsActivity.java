@@ -82,9 +82,9 @@ public class JoinDetailsActivity extends AppCompatActivity implements Response.L
         Log.d("DEBUG", "USERS = " + meetingInfo.getUsers());
         if (meetingInfo.getUsers() != null) {
             userLayout.removeAllViews();
-            for (String user : meetingInfo.getUsers()) {
+            for (UserInfo user : meetingInfo.getUsers()) {
                 TextView tv = new TextView(this);
-                tv.setText(user);
+                tv.setText(user.m_name);
                 userLayout.addView(tv);
             }
         }

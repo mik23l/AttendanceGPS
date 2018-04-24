@@ -23,7 +23,7 @@ public class MeetingInfo implements Serializable {
     String startDate;
     String endDate;
     String duration;
-    List<String> users;
+    List<UserInfo> users;
     Double lat, lon;
     String owner;
     Boolean active = false;
@@ -42,8 +42,10 @@ public class MeetingInfo implements Serializable {
             if (object.has("users")) {
                 users = new ArrayList<>();
                 JSONArray jsonArray = (JSONArray) object.get("users");
-                for (int j = 0; j < jsonArray.length(); j++)
-                    users.add(jsonArray.getString(j));
+                for (int j = 0; j < jsonArray.length(); j++) {
+                    UserInfo userInfo = new UserInfo(jsonArray.getJSONObject(j));
+                    users.add(userInfo);
+                }
                 Log.d("DEBUG", "UserInfo = " + users);
             }
 
@@ -85,7 +87,7 @@ public class MeetingInfo implements Serializable {
         return startDate;
     }
 
-    public List<String> getUsers() {
+    public List<UserInfo> getUsers() {
         return users;
     }
 
