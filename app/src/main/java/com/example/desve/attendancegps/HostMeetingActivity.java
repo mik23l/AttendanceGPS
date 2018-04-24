@@ -26,6 +26,8 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -117,6 +119,10 @@ public class HostMeetingActivity extends FragmentActivity implements GoogleMap.O
                 mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
             }
+            mMap.setMapStyle(
+                    MapStyleOptions.loadRawResourceStyle(
+                            this, R.raw.style_json));
+            
         } else {
             // Show rationale and request permission.
             ActivityCompat.requestPermissions(this, new String[] {

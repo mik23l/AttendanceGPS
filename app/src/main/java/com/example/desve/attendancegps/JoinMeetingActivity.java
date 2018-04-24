@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
@@ -26,9 +27,11 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONArray;
@@ -38,6 +41,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 public class JoinMeetingActivity extends FragmentActivity implements
         GoogleMap.OnMyLocationButtonClickListener,
@@ -102,6 +106,7 @@ public class JoinMeetingActivity extends FragmentActivity implements
     @Override
     public void onMapReady(GoogleMap map) {
         mMap = map;
+
         Log.d("DEBUG", "onMapReady called...");
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) ==
                 PackageManager.PERMISSION_GRANTED &&
@@ -129,7 +134,10 @@ public class JoinMeetingActivity extends FragmentActivity implements
                 mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
                 LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                mMap.addCircle(new CircleOptions().center(latLng).radius(200));
+                mMap.addCircle(new CircleOptions().center(latLng).radius(200).strokeColor(Color.WHITE));
+                mMap.setMapStyle(
+                        MapStyleOptions.loadRawResourceStyle(
+                                this, R.raw.style_json));
                 serverAPI.getNearbyMeetings(latLng);
 
             }
@@ -172,8 +180,9 @@ public class JoinMeetingActivity extends FragmentActivity implements
     public void addMarkers() {
         // Iterate through list of meetings and place marker
         Log.d("DEBUG", "" + meetingCoordinates.size());
+
         for(int i = 0; i < meetingCoordinates.size(); i++) {
-            mMap.addMarker(new MarkerOptions().position(meetingCoordinates.get(i)).title(spinnerArray.get(i)));
+            mMap.addMarker(new MarkerOptions().position(meetingCoordinates.get(i)).title(spinnerArray.get(i)).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));
 //            mMap.addCircle(new CircleOptions().center(meetingCoordinates.get(i)).radius(200));
         }
     }
