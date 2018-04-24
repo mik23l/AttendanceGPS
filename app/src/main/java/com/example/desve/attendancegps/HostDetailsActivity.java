@@ -63,6 +63,7 @@ public class HostDetailsActivity extends Activity implements Response.Listener<S
 
         swipeRefreshLayout.setOnRefreshListener(this);
         meetingName.setText(meetingInfo.getName());
+        updateUI();
     }
 
     public void askEndMeeting(View view) {
@@ -88,7 +89,7 @@ public class HostDetailsActivity extends Activity implements Response.Listener<S
         }
 
         if (meetingInfo.getOwner() != null) {
-            ownerText.setText("Owner: " + meetingInfo.getOwner());
+            ownerText.setText("Owner: " + meetingInfo.getOwnerName());
         } else {
             ownerText.setText("");
         }

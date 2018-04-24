@@ -68,7 +68,7 @@ public class JoinDetailsActivity extends Activity implements Response.Listener<S
         }
 
         if (meetingInfo.getOwner() != null) {
-            ownerText.setText("Owner: " + meetingInfo.getOwner());
+            ownerText.setText("Owner: " + meetingInfo.getOwnerName());
         } else {
             ownerText.setText("");
         }

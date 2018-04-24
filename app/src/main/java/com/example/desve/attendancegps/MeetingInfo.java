@@ -26,6 +26,7 @@ public class MeetingInfo implements Serializable {
     List<UserInfo> users;
     Double lat, lon;
     String owner;
+    UserInfo owner_data;
     Boolean active = false;
     String org;
 
@@ -38,7 +39,8 @@ public class MeetingInfo implements Serializable {
             startDate = object.getString("date");
             org = object.getString("organization");
             active = object.getBoolean("active");
-            owner = object.getString("owner");
+            owner_data = new UserInfo(object.getJSONObject("owner"));
+            owner = owner_data.m_id;
 
             if (object.has("users")) {
                 users = new ArrayList<>();
@@ -102,5 +104,9 @@ public class MeetingInfo implements Serializable {
 
     public void setOrg(String org) {
         this.org = org;
+    }
+
+    public String getOwnerName() {
+        return owner_data.m_name;
     }
 }
