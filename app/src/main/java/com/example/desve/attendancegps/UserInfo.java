@@ -13,10 +13,11 @@ public class UserInfo {
     String m_password;
     String m_name;
 
-    public UserInfo(String id, String username, String pass) {
+    public UserInfo(String id, String username, String pass, String name) {
         m_id = id;
         m_username = username;
         m_password = pass;
+        m_name = name;
     }
 
     public UserInfo(JSONObject object) {

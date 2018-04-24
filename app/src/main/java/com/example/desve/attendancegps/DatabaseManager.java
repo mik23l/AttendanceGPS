@@ -26,25 +26,26 @@ public class DatabaseManager {
         sqLiteDatabase.close();
     }
 
-    public void insertUserInfo(String idnum, String username, String password) {
+    public void insertUserInfo(String idnum, String username, String password, String name) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(DBOpenHelper.COLUMN_USERID, idnum);
         contentValues.put(DBOpenHelper.COLUMN_USERNAME, username);
         contentValues.put(DBOpenHelper.COLUMN_PASSWORD, password);
+        contentValues.put(DBOpenHelper.COLUMN_NAME, name);
         sqLiteDatabase.insert(DBOpenHelper.TABLE_NAME, null, contentValues);
     }
 
     public UserInfo getUserFromDB() {
         Cursor cursor = sqLiteDatabase.query(DBOpenHelper.TABLE_NAME,
                 new String[]{DBOpenHelper.COLUMN_ID, DBOpenHelper.COLUMN_USERID,
-                        DBOpenHelper.COLUMN_USERNAME, DBOpenHelper.COLUMN_PASSWORD},
+                        DBOpenHelper.COLUMN_USERNAME, DBOpenHelper.COLUMN_PASSWORD, DBOpenHelper.COLUMN_NAME},
                 null, null, null, null, null);
         cursor.moveToFirst();
         try {
-            UserInfo userInfo = new UserInfo(cursor.getString(1), cursor.getString(2), cursor.getString(3));
+            UserInfo userInfo = new UserInfo(cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4));
             return userInfo;
         } catch (RuntimeException e) {
-            return new UserInfo("", "", "");
+            return new UserInfo("", "", "", "");
         }
     }
 

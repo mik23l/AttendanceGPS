@@ -54,7 +54,7 @@ public class WelcomeActivity extends AppCompatActivity implements Response.Liste
 
         // Get username from database and set welcome message
         userInfo = databaseManager.getUserFromDB();
-        welcomeText.setText("Welcome, " + userInfo.m_username);
+        welcomeText.setText("Welcome,\n" + userInfo.m_name);
 
         serverAPI = new ServerAPI (this);
         serverAPI.getMyActiveMeetings(userInfo.m_id);

@@ -16,6 +16,7 @@ public class DBOpenHelper extends SQLiteOpenHelper {
     public static final String COLUMN_ID = "id";
     public static final String COLUMN_USERID = "userid";
     public static final String COLUMN_USERNAME = "username";
+    public static final String COLUMN_NAME = "name";
     public static final String COLUMN_PASSWORD = "password";
 
     private static final String SQL_CREATE_ENTRIES =
@@ -23,6 +24,7 @@ public class DBOpenHelper extends SQLiteOpenHelper {
                     COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                     COLUMN_USERID + " TEXT," +
                     COLUMN_USERNAME + " TEXT," +
+                    COLUMN_NAME + " TEXT," +
                     COLUMN_PASSWORD + " TEXT)";
 
     public DBOpenHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {

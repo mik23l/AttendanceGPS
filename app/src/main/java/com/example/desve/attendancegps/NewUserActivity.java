@@ -80,7 +80,8 @@ public class NewUserActivity extends AppCompatActivity implements Response.Liste
                 // Insert new user into local database
                 databaseManager.insertUserInfo(jsonObject.getString("id"),
                         jsonObject.getString("username"),
-                        jsonObject.getString("password"));
+                        jsonObject.getString("password"),
+                        jsonObject.getString("name"));
 
                 // Start welcome activity
                 Intent myIntent = new Intent(NewUserActivity.this, WelcomeActivity.class);
