@@ -102,7 +102,7 @@ public class JoinMeetingActivity extends FragmentActivity implements
     @Override
     public void onMapReady(GoogleMap map) {
         mMap = map;
-
+        Log.d("DEBUG", "onMapReady called...");
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) ==
                 PackageManager.PERMISSION_GRANTED &&
                 ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) ==
@@ -146,9 +146,10 @@ public class JoinMeetingActivity extends FragmentActivity implements
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         if (requestCode == MY_LOCATION_REQUEST_CODE) {
             if (permissions.length == 1 && permissions[0] == Manifest.permission.ACCESS_FINE_LOCATION && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
+                Log.d("DEBUG", "Approved");
             } else {
                 // Permission was denied. Display an error message.
+                Log.d("DEBUG", "Denied");
             }
         }
     }
@@ -165,6 +166,8 @@ public class JoinMeetingActivity extends FragmentActivity implements
         // (the camera animates to the user's current position).
         return false;
     }
+
+
 
     public void addMarkers() {
         // Iterate through list of meetings and place marker

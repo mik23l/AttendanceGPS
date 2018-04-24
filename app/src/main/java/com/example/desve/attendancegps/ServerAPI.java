@@ -8,6 +8,10 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.maps.model.LatLng;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+
 /**
  * Created by Desve on 4/11/2018.
  */
@@ -73,13 +77,30 @@ public class ServerAPI {
     }
 
     public void login(String username, String password) {
-        StringRequest request = new StringRequest(Request.Method.GET, getURL() + "login?user=" + username + "&pass=" + password, mainActivity, mainActivity);
-        queue.add(request);
+        try {
+            // Encode parameters that may contain spaces
+            String username_encoded = URLEncoder.encode(username, "UTF-8");
+            String password_encoded = URLEncoder.encode(password, "UTF-8");
+            StringRequest request = new StringRequest(Request.Method.GET, getURL() + "login?user=" + username_encoded + "&pass=" + password_encoded, mainActivity, mainActivity);
+            queue.add(request);
+        } catch (UnsupportedEncodingException e) {
+            throw new AssertionError("UTF-8 is unknown");
+
+        }
     }
 
     public void createNewUser(String username, String password) {
-        StringRequest request = new StringRequest(Request.Method.GET, getURL() + "user/add?user=" + username + "&pass=" + password, newUserActivity, newUserActivity);
-        queue.add(request);
+        try {
+            // Encode parameters that may contain spaces
+            String username_encoded = URLEncoder.encode(username, "UTF-8");
+            String password_encoded = URLEncoder.encode(password, "UTF-8");
+            StringRequest request = new StringRequest(Request.Method.GET, getURL() + "user/add?user=" + username_encoded + "&pass=" + password_encoded, newUserActivity, newUserActivity);
+            queue.add(request);
+
+        } catch (UnsupportedEncodingException e) {
+            throw new AssertionError("UTF-8 is unknown");
+
+        }
     }
 
     public void getMeetings() {
@@ -97,19 +118,35 @@ public class ServerAPI {
         queue.add(request);
     }
 
-    // FIXME add owner parameter
     public void startMeeting(String s, LatLng latLng, String owner, String organization) {
-        StringRequest request = new StringRequest(Request.Method.GET, getURL() +
-                "start_meeting?meeting_name=" + s +
-                "&lat=" + latLng.latitude + "&lon=" + latLng.longitude +
-                "&owner=" + owner + "&org=" + organization,
-                hostMeetingActivity, hostMeetingActivity);
-        queue.add(request);
+
+        try {
+            // Encode parameters that may contain spaces
+            String meeting_name_encoded = URLEncoder.encode(s, "UTF-8");
+            String organization_encoded = URLEncoder.encode(organization, "UTF-8");
+            StringRequest request = new StringRequest(Request.Method.GET, getURL() +
+                    "start_meeting?meeting_name=" + meeting_name_encoded +
+                    "&lat=" + latLng.latitude + "&lon=" + latLng.longitude +
+                    "&owner=" + owner + "&org=" + organization_encoded,
+                    hostMeetingActivity, hostMeetingActivity);
+            queue.add(request);
+        } catch (UnsupportedEncodingException e) {
+            throw new AssertionError("UTF-8 is unknown");
+
+        }
     }
 
     public void joinMeeting(String meetingID, String username) {
-        StringRequest request = new StringRequest(Request.Method.GET, getURL() + "join_meeting?meeting=" + meetingID + "&user=" + username, joinDetailsActivity, joinDetailsActivity);
-        queue.add(request);
+
+        try {
+            // Encode parameters that may contain spaces
+            String username_encoded = URLEncoder.encode(username, "UTF-8");
+            StringRequest request = new StringRequest(Request.Method.GET, getURL() + "join_meeting?meeting=" + meetingID + "&user=" + username_encoded, joinDetailsActivity, joinDetailsActivity);
+            queue.add(request);
+        } catch (UnsupportedEncodingException e) {
+            throw new AssertionError("UTF-8 is unknown");
+
+        }
     }
 
     public void getMeeting(String id) {
