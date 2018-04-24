@@ -1,5 +1,6 @@
 package com.example.desve.attendancegps;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,7 +23,7 @@ Sams API key = AIzaSyD1S--hFyAhoxJyfGSmuUOrEwH1HVIk_7c
 
  */
 
-public class MainActivity extends AppCompatActivity implements Response.Listener<String>, Response.ErrorListener {
+public class MainActivity extends Activity implements Response.Listener<String>, Response.ErrorListener {
 
     EditText usernameEditText;
     EditText passwordEditText;

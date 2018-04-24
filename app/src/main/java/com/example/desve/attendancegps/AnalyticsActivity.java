@@ -1,9 +1,10 @@
 package com.example.desve.attendancegps;
 
+import android.app.Activity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class AnalyticsActivity extends AppCompatActivity {
+public class AnalyticsActivity extends Activity {
 
 
 

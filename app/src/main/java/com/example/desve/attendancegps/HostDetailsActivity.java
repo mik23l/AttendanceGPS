@@ -1,5 +1,6 @@
 package com.example.desve.attendancegps;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -18,7 +19,7 @@ import com.android.volley.VolleyError;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class HostDetailsActivity extends AppCompatActivity implements Response.Listener<String>, Response.ErrorListener,SwipeRefreshLayout.OnRefreshListener {
+public class HostDetailsActivity extends Activity implements Response.Listener<String>, Response.ErrorListener,SwipeRefreshLayout.OnRefreshListener {
 
     TextView meetingName;
     TextView orgText;

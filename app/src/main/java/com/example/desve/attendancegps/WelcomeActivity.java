@@ -1,5 +1,6 @@
 package com.example.desve.attendancegps;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
@@ -17,7 +18,7 @@ import com.android.volley.VolleyError;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class WelcomeActivity extends AppCompatActivity implements Response.Listener<String>, Response.ErrorListener {
+public class WelcomeActivity extends Activity implements Response.Listener<String>, Response.ErrorListener {
 
     TextView welcomeText;
 

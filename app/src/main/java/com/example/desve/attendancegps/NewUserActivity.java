@@ -1,5 +1,6 @@
 package com.example.desve.attendancegps;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,7 +15,7 @@ import com.android.volley.VolleyError;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class NewUserActivity extends AppCompatActivity implements Response.Listener<String>, Response.ErrorListener {
+public class NewUserActivity extends Activity implements Response.Listener<String>, Response.ErrorListener {
 
     EditText usernameEditText;
     EditText passwordEditText;
