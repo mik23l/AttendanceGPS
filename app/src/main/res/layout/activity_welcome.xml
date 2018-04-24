@@ -55,9 +55,9 @@
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/colorPrimary"
+            android:textColor="@color/common_google_signin_btn_text_dark"
             android:onClick="onCurrentClicked"
-            android:text="Current Meeting"
-            android:theme="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored" />
+            android:text="Current Meeting" />
 
     </LinearLayout>
 

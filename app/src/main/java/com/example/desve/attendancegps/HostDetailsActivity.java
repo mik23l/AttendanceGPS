@@ -68,11 +68,10 @@ public class HostDetailsActivity extends AppCompatActivity implements Response.L
         new AlertDialog.Builder(this)
                 .setTitle("Options")
                 .setMessage("End this meeting?")
-                .setIcon(android.R.drawable.ic_dialog_alert)
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        Toast.makeText(HostDetailsActivity.this, "Ended Meeting", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(HostDetailsActivity.this, "Ending Meeting", Toast.LENGTH_SHORT).show();
                         serverAPI.endMeeting(meetingInfo.getId());
                     }})
                 .setNegativeButton(android.R.string.no, null).show();
