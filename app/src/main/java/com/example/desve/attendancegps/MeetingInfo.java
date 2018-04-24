@@ -38,6 +38,7 @@ public class MeetingInfo implements Serializable {
             startDate = object.getString("date");
             org = object.getString("organization");
             active = object.getBoolean("active");
+            owner = object.getString("owner");
 
             if (object.has("users")) {
                 users = new ArrayList<>();
