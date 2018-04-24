@@ -29,6 +29,7 @@ public class WelcomeActivity extends AppCompatActivity implements Response.Liste
     Button currentMeeting;
     LinearLayout layout;
     UserInfo userInfo;
+    MeetingInfo meetingInfo;
 
     // RESULTS CODES
     static final int HOST_MEETING = 1;
@@ -45,6 +46,7 @@ public class WelcomeActivity extends AppCompatActivity implements Response.Liste
         hostButton  = findViewById(R.id.host_button);
         layout      = findViewById(R.id.linear_layout);
         welcomeText = findViewById(R.id.welcome_text);
+        currentMeeting = findViewById(R.id.currentButton);
 
 
         databaseManager = new DatabaseManager(this);
@@ -72,13 +74,13 @@ public class WelcomeActivity extends AppCompatActivity implements Response.Liste
         if (requestCode == HOST_MEETING && resultCode == RESULT_OK) {
             Log.d("DEBUG", "Welcome : result host meeting");
 
-            MeetingInfo meetingInfo = (MeetingInfo) data.getExtras().getSerializable("MEETING");
+            MeetingInfo mInfo = (MeetingInfo) data.getExtras().getSerializable("MEETING");
 
-            Log.d("DEBUG", "meeting info = " + meetingInfo);
+            Log.d("DEBUG", "meeting info = " + mInfo);
 
-            if (meetingInfo != null) {
+            if (mInfo != null) {
                 Intent myIntent = new Intent(this, HostDetailsActivity.class);
-                myIntent.putExtra("MEETING", meetingInfo);
+                myIntent.putExtra("MEETING", mInfo);
                 startActivityForResult(myIntent, HOST_DETAILS);
             }
 
@@ -88,13 +90,13 @@ public class WelcomeActivity extends AppCompatActivity implements Response.Liste
         }
         else if (requestCode == JOIN_MEETING && resultCode == RESULT_OK) {
             Log.d("DEBUG", "Welcome : result join meeting");
-            MeetingInfo meetingInfo = (MeetingInfo) data.getExtras().getSerializable("MEETING");
+            MeetingInfo mInfo = (MeetingInfo) data.getExtras().getSerializable("MEETING");
 
-            Log.d("DEBUG", "meeting info = " + meetingInfo);
+            Log.d("DEBUG", "meeting info = " + mInfo);
 
-            if (meetingInfo != null) {
+            if (mInfo != null) {
                 Intent myIntent = new Intent(this, JoinDetailsActivity.class);
-                myIntent.putExtra("MEETING", meetingInfo);
+                myIntent.putExtra("MEETING", mInfo);
                 startActivityForResult(myIntent, JOIN_DETAILS);
             }
         }
@@ -148,41 +150,28 @@ public class WelcomeActivity extends AppCompatActivity implements Response.Liste
 
             if(jsonObject.has("NoActive")) {
                 Log.d("DEBUG", "No Current Meeting");
-                if (currentMeeting != null) {
-                    layout.removeView(currentMeeting);
-                    currentMeeting = null;
-                }
                 hostButton.setAlpha(1);
                 hostButton.setClickable(true);
+                currentMeeting.setClickable(false);
+                currentMeeting.setVisibility(View.INVISIBLE);
             }
             else {
                 Log.d("DEBUG", jsonObject.toString());
                 hostButton.setAlpha(.5f);
                 hostButton.setClickable(false);
-
-                if (currentMeeting == null) {
-                    currentMeeting = new Button(this);
-                    currentMeeting.setOnClickListener(new View.OnClickListener() {
-                        public void onClick(View v) {
-                            Log.d("DEBUG", "Starting HostDetails from CurrentMeeting");
-                            Intent myIntent = new Intent(WelcomeActivity.this, HostDetailsActivity.class);
-                            MeetingInfo meetingInfo = new MeetingInfo(jsonObject);
-                            myIntent.putExtra("MEETING", meetingInfo);
-                            WelcomeActivity.this.startActivityForResult(myIntent, HOST_DETAILS);
-                        }
-                    });
-                    currentMeeting.setText("Current Meeting");
-                    currentMeeting.setTextColor(Color.WHITE);
-                    currentMeeting.setBackgroundColor(Color.RED);
-                    currentMeeting.setLayoutParams(new ViewGroup.LayoutParams(
-                            ViewGroup.LayoutParams.WRAP_CONTENT,
-                            ViewGroup.LayoutParams.WRAP_CONTENT));
-                    layout.addView(currentMeeting);
-                }
+                currentMeeting.setClickable(true);
+                currentMeeting.setVisibility(View.VISIBLE);
+                meetingInfo = new MeetingInfo(jsonObject);
             }
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    public void onCurrentClicked(View view) {
+        Intent myIntent = new Intent(WelcomeActivity.this, HostDetailsActivity.class);
+        myIntent.putExtra("MEETING", meetingInfo);
+        WelcomeActivity.this.startActivityForResult(myIntent, HOST_DETAILS);
     }
 }

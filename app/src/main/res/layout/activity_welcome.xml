@@ -29,23 +29,30 @@
             />
 
         <Button
-            android:layout_width="150dp"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:text="Join Meeting"
             android:onClick="joinMeeting"/>
 
         <Button
-            android:layout_width="150dp"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:text="Host Meeting"
             android:onClick="hostMeeting"
             android:id="@+id/host_button"/>
 
         <Button
-            android:layout_width="150dp"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:text="Analytics"
             android:onClick="analytics"/>
+
+        <Button
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:text="Current Meeting"
+            android:id="@+id/currentButton"
+            android:onClick="onCurrentClicked"/>
 
     </LinearLayout>
 
