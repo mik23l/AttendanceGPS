@@ -91,6 +91,7 @@ public class JoinMeetingActivity extends FragmentActivity implements
         if (spinner.getSelectedItem() != null) {
             String selectedMeeting = spinner.getSelectedItem().toString();
             meetingInfo = meetingInfoHashMap.get(selectedMeeting);
+            Log.d("DEBUG", "meeting = " + meetingInfo);
             finish();
         }
         else {
@@ -224,7 +225,7 @@ public class JoinMeetingActivity extends FragmentActivity implements
 
     @Override
     public void finish() {
-        Log.d("DEBUG", "Finishing host activity");
+        Log.d("DEBUG", "Finishing join activity");
         Intent intent = new Intent();
         intent.putExtra("MEETING", meetingInfo);
         setResult(RESULT_OK, intent);

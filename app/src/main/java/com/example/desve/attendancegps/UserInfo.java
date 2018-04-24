@@ -3,11 +3,13 @@ package com.example.desve.attendancegps;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
+
 /**
  * Created by Samuel McGhee on 4/18/2018.
  */
 
-public class UserInfo {
+public class UserInfo implements Serializable {
     String m_id;
     String m_username;
     String m_password;
