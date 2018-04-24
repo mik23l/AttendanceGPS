@@ -57,6 +57,7 @@ public class JoinMeetingActivity extends FragmentActivity implements
 
     List<LatLng> meetingCoordinates;
     HashMap<String, MeetingInfo> meetingInfoHashMap;
+    MeetingInfo meetingInfo;
 
     ServerAPI serverAPI;
 
@@ -89,10 +90,8 @@ public class JoinMeetingActivity extends FragmentActivity implements
         Log.d("DEBUG", "selected item = " + spinner.getSelectedItem());
         if (spinner.getSelectedItem() != null) {
             String selectedMeeting = spinner.getSelectedItem().toString();
-
-            Intent myIntent = new Intent(JoinMeetingActivity.this, JoinDetailsActivity.class);
-            myIntent.putExtra("MEETING", meetingInfoHashMap.get(selectedMeeting));
-            startActivity(myIntent);
+            meetingInfo = meetingInfoHashMap.get(selectedMeeting);
+            finish();
         }
         else {
             Toast.makeText(this, "No Meetings Available", Toast.LENGTH_SHORT);
@@ -222,4 +221,14 @@ public class JoinMeetingActivity extends FragmentActivity implements
     public void onErrorResponse(VolleyError error) {
 
     }
+
+    @Override
+    public void finish() {
+        Log.d("DEBUG", "Finishing host activity");
+        Intent intent = new Intent();
+        intent.putExtra("MEETING", meetingInfo);
+        setResult(RESULT_OK, intent);
+        super.finish();
+    }
+
 }

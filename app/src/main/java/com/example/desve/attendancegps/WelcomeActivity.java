@@ -106,7 +106,6 @@ public class WelcomeActivity extends AppCompatActivity implements Response.Liste
     // On host meeting button clicked
     public void hostMeeting(View view) {
         Intent myIntent = new Intent(WelcomeActivity.this, HostMeetingActivity.class);
-//        WelcomeActivity.this.startActivity(myIntent);
         startActivityForResult(myIntent, HOST_MEETING);
     }
 
