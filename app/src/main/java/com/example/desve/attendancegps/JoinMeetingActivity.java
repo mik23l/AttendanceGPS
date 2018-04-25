@@ -14,9 +14,11 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -75,8 +77,8 @@ public class JoinMeetingActivity extends FragmentActivity implements
         linearLayout = findViewById(R.id.linear_layout);
 
         meetingInfoList = new ArrayList<>();
-        meetingViews    = new ArrayList<>();
-        markerList      = new ArrayList<>();
+        meetingViews = new ArrayList<>();
+        markerList = new ArrayList<>();
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -97,30 +99,52 @@ public class JoinMeetingActivity extends FragmentActivity implements
     public void onMapReady(GoogleMap map) {
         mMap = map;
 
-        // This is fine
-        mMap.setMyLocationEnabled(true);
-        mMap.setOnMyLocationButtonClickListener(this);
-        mMap.setOnMyLocationClickListener(this);
+        // Check if location permissions aren't allowed yet
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
-        // Updates current location
-        gpsManager.register();
+            // Request location permissions
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 0);
 
-        if (currentLocation != null)
-        {
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), 13));
+        }
 
-            CameraPosition cameraPosition = new CameraPosition.Builder()
-                    .target(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()))      // Sets the center of the map to location user
-                    .zoom(17)                   // Sets the zoom
-                    .bearing(90)                // Sets the orientation of the camera to east
-                    .tilt(40)                   // Sets the tilt of the camera to 30 degrees
-                    .build();                   // Creates a CameraPosition from the builder
-            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        // Permissions allowed
+        else {
 
-            mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.style_json));
-            // Set a listener for info window events.
-            mMap.setOnInfoWindowClickListener(this);
+            gpsManager.register();
+            mMap.setMyLocationEnabled(true);
+            mMap.setOnMyLocationButtonClickListener(this);
+            mMap.setOnMyLocationClickListener(this);
 
+            if (currentLocation != null) {
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), 13));
+
+                CameraPosition cameraPosition = new CameraPosition.Builder()
+                        .target(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()))      // Sets the center of the map to location user
+                        .zoom(17)                   // Sets the zoom
+                        .bearing(90)                // Sets the orientation of the camera to east
+                        .tilt(40)                   // Sets the tilt of the camera to 30 degrees
+                        .build();                   // Creates a CameraPosition from the builder
+                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+                mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.style_json));
+                // Set a listener for info window events.
+                mMap.setOnInfoWindowClickListener(this);
+
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
+    {super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+            // Restart map
+            onMapReady(mMap);
+        }
+        else {
+            Toast.makeText(getApplicationContext(),"Please allow location permissions to join meetings!",Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -141,6 +165,11 @@ public class JoinMeetingActivity extends FragmentActivity implements
         if (meetingInfoList.size() == 0) {
             TextView textView = new TextView(this);
             textView.setText("No Meetings to Show");
+            textView.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT));
+            textView.setGravity(Gravity.CENTER);
+            textView.setTextSize(20);
             linearLayout.addView(textView);
             return;
         }
