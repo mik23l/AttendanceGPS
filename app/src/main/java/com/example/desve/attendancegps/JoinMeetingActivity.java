@@ -91,7 +91,7 @@ public class JoinMeetingActivity extends FragmentActivity implements
         if (mMap != null) {
             mMap.clear();
             //addmarkers();
-            mMap.addCircle(new CircleOptions().center(latLng).radius(200).strokeColor(Color.WHITE));
+            mMap.addCircle(new CircleOptions().center(latLng).radius(100).strokeColor(Color.WHITE));
             serverAPI.getNearbyMeetings(latLng);
         }
     }
