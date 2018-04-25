@@ -2,7 +2,6 @@ package com.example.desve.attendancegps;
 
 import android.Manifest;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -14,14 +13,10 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.Spinner;
+import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -42,9 +37,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 
 public class JoinMeetingActivity extends FragmentActivity implements
         GoogleMap.OnMyLocationButtonClickListener,
@@ -52,15 +45,19 @@ public class JoinMeetingActivity extends FragmentActivity implements
         Response.ErrorListener,
         GoogleMap.OnMyLocationClickListener,
         OnMapReadyCallback,
-        GoogleMap.OnInfoWindowClickListener {
+        GoogleMap.OnInfoWindowClickListener, View.OnClickListener {
 
     int MY_LOCATION_REQUEST_CODE = 99;
     private GoogleMap mMap;
 
-    HashMap<String, MeetingInfo> meetingInfoHashMap;
+    List<MeetingInfo> meetingInfoList;
+    List<View> meetingViews;
+    List<Marker> markerList;
+
     MeetingInfo meetingInfo;
 
     ServerAPI serverAPI;
+    LinearLayout linearLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +67,11 @@ public class JoinMeetingActivity extends FragmentActivity implements
 
         serverAPI = new ServerAPI(this);
 
-        meetingInfoHashMap = new HashMap<>();
+        linearLayout = findViewById(R.id.linear_layout);
+
+        meetingInfoList = new ArrayList<>();
+        meetingViews    = new ArrayList<>();
+        markerList      = new ArrayList<>();
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -110,7 +111,7 @@ public class JoinMeetingActivity extends FragmentActivity implements
                 mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
                 LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                mMap.addCircle(new CircleOptions().center(latLng).radius(200).strokeColor(Color.WHITE));
+                mMap.addCircle(new CircleOptions().center(latLng).radius(100).strokeColor(Color.WHITE));
                 mMap.setMapStyle(
                         MapStyleOptions.loadRawResourceStyle(
                                 this, R.raw.style_json));
@@ -118,7 +119,6 @@ public class JoinMeetingActivity extends FragmentActivity implements
                 mMap.setOnInfoWindowClickListener(this);
 
                 serverAPI.getNearbyMeetings(latLng);
-
             }
         } else {
             // Show rationale and request permission.
@@ -148,32 +148,55 @@ public class JoinMeetingActivity extends FragmentActivity implements
 
     @Override
     public boolean onMyLocationButtonClick() {
-
         return false;
     }
 
-    public void addMarkers() {
-
+    private void populateLayout() {
+        linearLayout.removeAllViews();
+        meetingViews.clear();
         // Check for no meetings
-        if (meetingInfoHashMap.size() == 0) {
-
-            new android.app.AlertDialog.Builder(this)
-                    .setTitle("No meetings currently available!")
-                    .setNeutralButton(android.R.string.ok, null).show();
-
+        if (meetingInfoList.size() == 0) {
+            TextView textView = new TextView(this);
+            textView.setText("No Meetings to Show");
+            linearLayout.addView(textView);
+            return;
         }
 
+        int i = 0;
+        for (MeetingInfo meetingInfo : meetingInfoList) {
+            View view = getLayoutInflater().inflate(R.layout.meeting_item, linearLayout, false);
+
+            TextView name = view.findViewById(R.id.meeting_name);
+            TextView org = view.findViewById(R.id.meeting_org);
+            TextView time = view.findViewById(R.id.meeting_time);
+
+            name.setText(meetingInfo.getName());
+            org.setText(meetingInfo.getOrg());
+            time.setText(meetingInfo.getStartDate());
+
+            view.setOnClickListener(this);
+            view.setTag(i);
+            meetingViews.add(view);
+            linearLayout.addView(view);
+            i++;
+        }
+    }
+
+    public void addMarkers() {
         // Iterate through list of meetings and place marker
-        for (MeetingInfo meetingInfo : meetingInfoHashMap.values()) {
+        markerList.clear();
+        int i=0;
+        for (MeetingInfo meetingInfo : meetingInfoList) {
             Log.d("DEBUG", meetingInfo.getName());
             Marker marker = mMap.addMarker(new MarkerOptions()
                     .position(meetingInfo.getCoor())
                     .title(meetingInfo.getName())
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));
-
+            marker.setTag(i);
             marker.showInfoWindow();
+            i++;
+            markerList.add(marker);
         }
-
     }
 
     @Override
@@ -186,9 +209,9 @@ public class JoinMeetingActivity extends FragmentActivity implements
             for (int i = 0; i < list.length(); i++) {
                 JSONObject meeting = list.optJSONObject(i);
                 MeetingInfo m = new MeetingInfo(meeting);
-                meetingInfoHashMap.put(m.getName(), m);
+                meetingInfoList.add(m);
             }
-
+            populateLayout();
             addMarkers();
 
         } catch (JSONException e) {
@@ -208,22 +231,49 @@ public class JoinMeetingActivity extends FragmentActivity implements
 
     @Override
     public void onInfoWindowClick(Marker marker) {
-        final String title = marker.getTitle();
-        meetingInfo = meetingInfoHashMap.get(title);
-        new android.app.AlertDialog.Builder(this)
-                .setTitle(title)
-                .setMessage("Owner: " + meetingInfo.getOwnerName() + "\nOrganization: " + meetingInfo.getOrg() + "\n\nJoin this meeting?")
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        Toast.makeText(JoinMeetingActivity.this, "Joining Meeting", Toast.LENGTH_SHORT).show();
-                        finish();
-                    }})
-                .setNegativeButton(android.R.string.no, null).show();
+        Log.d("DEBUG", "Marker Tag = " + marker.getTag());
+        int idx = (int)marker.getTag();
+        meetingInfo = meetingInfoList.get(idx);
+        selectMeeting(idx);
     }
 
     @Override
     public void onErrorResponse(VolleyError error) {
 
+    }
+
+    private void selectMeeting(Object tag) {
+        for (int i=0; i<meetingViews.size(); i++) {
+            View tempView = meetingViews.get(i);
+            if(tempView.getTag() != tag) {
+                LinearLayout layout = tempView.findViewById(R.id.linear_layout);
+                layout.setBackground(getResources().getDrawable(R.drawable.customborder));
+            }
+            else {
+                LinearLayout layout = tempView.findViewById(R.id.linear_layout);
+                layout.setBackground(getResources().getDrawable(R.drawable.customborder2));
+            }
+        }
+    }
+
+    @Override
+    public void onClick(View view) {
+        Log.d("DEBUG", "Meeting item clicked");
+        selectMeeting(view.getTag());
+        int idx = (int)view.getTag();
+        meetingInfo = meetingInfoList.get(idx);
+        Marker marker = markerList.get(idx);
+        marker.showInfoWindow();
+    }
+
+    public void onJoinMeetingClicked(View view) {
+        Log.d("DEBUG", "Join meeting clicked");
+        finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+        meetingInfo = null;
+        finish();
     }
 }
