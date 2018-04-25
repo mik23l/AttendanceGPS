@@ -4,11 +4,13 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Spinner;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class AnalyticsActivity extends Activity implements View.OnClickListener {
 
@@ -20,6 +22,7 @@ public class AnalyticsActivity extends Activity implements View.OnClickListener 
     ListView host_list;
 
     ArrayList<MeetingObject> meetingList = new ArrayList<>();
+    List<String> organizationList = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +53,14 @@ public class AnalyticsActivity extends Activity implements View.OnClickListener 
         MeetingListAdapter adapter = new MeetingListAdapter(this,R.layout.adapter_view_layout, meetingList);
         attend_list.setAdapter(adapter);
         host_list.setAdapter(adapter);
+
+        organizationList.add("CS 3714");
+        organizationList.add("CHEM 1036");
+        organizationList.add("ECE 3574");
+
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, organizationList);
+        attend_spin.setAdapter(dataAdapter);
+        host_spin.setAdapter(dataAdapter);
     }
 
     @Override
