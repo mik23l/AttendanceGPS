@@ -12,6 +12,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -80,14 +81,23 @@ public class HostMeetingActivity extends FragmentActivity implements GoogleMap.O
     }
 
     public void onHostMeeting (View view) {
-        Location currentLocation = mMap.getMyLocation();
-        if (currentLocation != null) {
-            LatLng latLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-            Log.d("DEBUG", "Start meeting called...");
-            serverAPI.startMeeting(editText.getText().toString(),
-                    latLng, userInfo.m_id,
-                    organizationEditText.getText().toString());
+
+        // Check if username and password are not blank
+        if(!TextUtils.isEmpty(editText.getText()) && !TextUtils.isEmpty(organizationEditText.getText())) {
+
+            Location currentLocation = mMap.getMyLocation();
+            if (currentLocation != null) {
+                LatLng latLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+                Log.d("DEBUG", "Start meeting called...");
+                serverAPI.startMeeting(editText.getText().toString(),
+                        latLng, userInfo.m_id,
+                        organizationEditText.getText().toString());
+            }
         }
+        else { // Username or password field is blank
+            Toast.makeText(getApplicationContext(), "One or more field left blank!", Toast.LENGTH_LONG).show();
+        }
+        
     }
 
     @Override
