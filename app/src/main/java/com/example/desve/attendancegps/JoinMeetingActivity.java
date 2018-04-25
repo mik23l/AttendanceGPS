@@ -152,15 +152,10 @@ public class JoinMeetingActivity extends FragmentActivity implements
         return false;
     }
 
-
-
     public void addMarkers() {
-        // Iterate through list of meetings and place marker
 
-        Log.d("DEBUG", "HashMap size: " + meetingInfoHashMap.size());
-
+        // Check for no meetings
         if (meetingInfoHashMap.size() == 0) {
-            Log.d("DEBUG", "Displaying notification");
 
             new android.app.AlertDialog.Builder(this)
                     .setTitle("No meetings currently available!")
@@ -168,6 +163,7 @@ public class JoinMeetingActivity extends FragmentActivity implements
 
         }
 
+        // Iterate through list of meetings and place marker
         for (MeetingInfo meetingInfo : meetingInfoHashMap.values()) {
             Log.d("DEBUG", meetingInfo.getName());
             Marker marker = mMap.addMarker(new MarkerOptions()
@@ -192,8 +188,6 @@ public class JoinMeetingActivity extends FragmentActivity implements
                 MeetingInfo m = new MeetingInfo(meeting);
                 meetingInfoHashMap.put(m.getName(), m);
             }
-
-            Log.d("DEBUG", "HashMap size: " + meetingInfoHashMap.size());
 
             addMarkers();
 
