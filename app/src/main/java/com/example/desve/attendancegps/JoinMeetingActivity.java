@@ -89,9 +89,6 @@ public class JoinMeetingActivity extends FragmentActivity implements
         this.currentLocation = currentLocation;
         LatLng latLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
         if (mMap != null) {
-            mMap.clear();
-            //addmarkers();
-            mMap.addCircle(new CircleOptions().center(latLng).radius(100).strokeColor(Color.WHITE));
             serverAPI.getNearbyMeetings(latLng);
         }
     }
@@ -201,6 +198,9 @@ public class JoinMeetingActivity extends FragmentActivity implements
                 meetingInfoList.add(m);
             }
             populateLayout();
+            mMap.clear();
+            LatLng latLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+            mMap.addCircle(new CircleOptions().center(latLng).radius(100).strokeColor(Color.WHITE));
             addMarkers();
 
         } catch (JSONException e) {
@@ -215,6 +215,7 @@ public class JoinMeetingActivity extends FragmentActivity implements
         Intent intent = new Intent();
         intent.putExtra("MEETING", meetingInfo);
         setResult(RESULT_OK, intent);
+        gpsManager.unregister();
         super.finish();
     }
 
