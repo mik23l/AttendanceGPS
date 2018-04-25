@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="100">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="33.33">
+
+        <TextView
+            android:gravity="center"
+            android:text="Meeting Name"
+            android:textSize="15dp"
+            android:textAlignment="center"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:id="@+id/textView1"/>
+
+        <TextView
+            android:gravity="center"
+            android:text="Organization"
+            android:textSize="12dp"
+            android:textAlignment="center"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:id="@+id/textView2"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="29.33">
+
+        <TextView
+            android:gravity="center"
+            android:text="Date"
+            android:textSize="12dp"
+            android:textAlignment="center"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:id="@+id/textView3"/>
+
+        <TextView
+            android:gravity="center"
+            android:text="Duration"
+            android:textSize="12dp"
+            android:textAlignment="center"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:id="@+id/textView4"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:gravity="center"
+        android:layout_weight="37.33"
+        android:text="# Attendees"
+        android:textSize="12dp"
+        android:textAlignment="center"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:id="@+id/textView5"/>
+
+</LinearLayout>

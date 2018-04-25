@@ -1,15 +1,59 @@
 package com.example.desve.attendancegps;
 
 import android.app.Activity;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ListView;
+import android.widget.Spinner;
 
-public class AnalyticsActivity extends Activity {
+import java.util.ArrayList;
+
+public class AnalyticsActivity extends Activity implements View.OnClickListener {
+
+    Spinner attend_spin;
+    Button attend_filter;
+    ListView attend_list;
+    Spinner host_spin;
+    Button host_filter;
+    ListView host_list;
+
+    ArrayList<MeetingObject> meetingList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_analytics);
+        attend_spin=(Spinner)findViewById(R.id.attend_spin);
+        attend_filter=(Button)findViewById(R.id.attend_filter);
+        attend_list=(ListView)findViewById(R.id.attend_list);
+        host_spin=(Spinner)findViewById(R.id.host_spin);
+        host_filter=(Button)findViewById(R.id.host_filter);
+        host_list=(ListView)findViewById(R.id.host_list);
+
+        attend_filter.setOnClickListener(this);
+        host_filter.setOnClickListener(this);
+
+        // Create the Meeting object
+        MeetingObject meeting1 = new MeetingObject("Meeting 1", "CS 3714", "4/25/2018", "1 hr 20 min", "45");
+        MeetingObject meeting2 = new MeetingObject("Meeting 1", "CS 3714", "4/25/2018", "1 hr 20 min", "45");
+        MeetingObject meeting3 = new MeetingObject("Meeting 1", "CS 3714", "4/25/2018", "1 hr 20 min", "45");
+        MeetingObject meeting4 = new MeetingObject("Meeting 1", "CS 3714", "4/25/2018", "1 hr 20 min", "45");
+
+        // Add the Meeting object to an ArrayList
+        meetingList.add(meeting1);
+        meetingList.add(meeting2);
+        meetingList.add(meeting3);
+        meetingList.add(meeting4);
+
+        MeetingListAdapter adapter = new MeetingListAdapter(this,R.layout.adapter_view_layout, meetingList);
+        attend_list.setAdapter(adapter);
+        host_list.setAdapter(adapter);
     }
 
+    @Override
+    public void onClick(View view) {
+
+    }
 }
