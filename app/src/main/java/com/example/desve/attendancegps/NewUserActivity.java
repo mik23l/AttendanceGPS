@@ -83,10 +83,12 @@ public class NewUserActivity extends Activity implements Response.Listener<Strin
                         jsonObject.getString("username"),
                         jsonObject.getString("password"),
                         jsonObject.getString("name"));
+                databaseManager.close();
 
                 // Start welcome activity
-                Intent myIntent = new Intent(NewUserActivity.this, WelcomeActivity.class);
-                NewUserActivity.this.startActivity(myIntent);
+//                Intent myIntent = new Intent(NewUserActivity.this, WelcomeActivity.class);
+//                NewUserActivity.this.startActivity(myIntent);
+                finish();
             }
 
             else {
@@ -101,6 +103,12 @@ public class NewUserActivity extends Activity implements Response.Listener<Strin
     @Override
     public void onErrorResponse(VolleyError error) {
 
+    }
+
+    @Override
+    public void finish() {
+        setResult(RESULT_OK);
+        super.finish();
     }
 
 }

@@ -33,6 +33,8 @@ public class MainActivity extends Activity implements Response.Listener<String>,
     ServerAPI       serverAPI;
     DatabaseManager databaseManager;
 
+    static final int NEW_USER_RESULT = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,10 +76,27 @@ public class MainActivity extends Activity implements Response.Listener<String>,
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && requestCode == NEW_USER_RESULT) {
+            UserInfo userInfo = databaseManager.getUserFromDB();
+            Log.d("debug", "Loaded: " + userInfo.m_username);
+            if (!userInfo.m_username.equals("")) {
+                Log.d("debug", "Using database login");
+                // Set username and password while loading
+                usernameEditText.setText(userInfo.m_username);
+                passwordEditText.setText(userInfo.m_password);
+
+                serverAPI.login(userInfo.m_username, userInfo.m_password);
+            }
+        }
+    }
+
     // New user button clicked
     public void onNewUser (View view) {
         Intent myIntent = new Intent(MainActivity.this, NewUserActivity.class);
-        MainActivity.this.startActivity(myIntent);
+        startActivityForResult(myIntent, NEW_USER_RESULT);
     }
 
     @Override
