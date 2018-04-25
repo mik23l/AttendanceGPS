@@ -53,7 +53,7 @@
                     android:textStyle="bold"
                     android:background="#c0c0c0"
                     android:layout_width="match_parent"
-                    android:layout_height="30dp"/>
+                    android:layout_height="23dp"/>
 
                 <TextView
                     android:gravity="center"
@@ -64,7 +64,7 @@
                     android:textStyle="bold"
                     android:background="#c0c0c0"
                     android:layout_width="match_parent"
-                    android:layout_height="30dp"/>
+                    android:layout_height="23dp"/>
 
             </LinearLayout>
 
@@ -83,7 +83,7 @@
                     android:textStyle="bold"
                     android:background="#c0c0c0"
                     android:layout_width="match_parent"
-                    android:layout_height="30dp"/>
+                    android:layout_height="23dp"/>
 
                 <TextView
                     android:gravity="center"
@@ -94,7 +94,7 @@
                     android:textStyle="bold"
                     android:background="#c0c0c0"
                     android:layout_width="match_parent"
-                    android:layout_height="30dp"/>
+                    android:layout_height="23dp"/>
 
             </LinearLayout>
 
@@ -108,12 +108,12 @@
                 android:textStyle="bold"
                 android:background="#c0c0c0"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"/>
+                android:layout_height="46dp"/>
         </LinearLayout>
         <ListView
             android:id="@+id/attend_list"
             android:layout_width="match_parent"
-            android:layout_height="175dp">
+            android:layout_height="150dp">
         </ListView>
         <TextView
             android:layout_width="wrap_content"
@@ -183,7 +183,7 @@
                     android:textStyle="bold"
                     android:background="#c0c0c0"
                     android:layout_width="match_parent"
-                    android:layout_height="30dp"/>
+                    android:layout_height="23dp"/>
 
                 <TextView
                     android:gravity="center"
@@ -194,7 +194,7 @@
                     android:textStyle="bold"
                     android:background="#c0c0c0"
                     android:layout_width="match_parent"
-                    android:layout_height="30dp"/>
+                    android:layout_height="23dp"/>
 
             </LinearLayout>
 
@@ -213,7 +213,7 @@
                     android:textStyle="bold"
                     android:background="#c0c0c0"
                     android:layout_width="match_parent"
-                    android:layout_height="30dp"/>
+                    android:layout_height="23dp"/>
 
                 <TextView
                     android:gravity="center"
@@ -224,7 +224,7 @@
                     android:textStyle="bold"
                     android:background="#c0c0c0"
                     android:layout_width="match_parent"
-                    android:layout_height="30dp"/>
+                    android:layout_height="23dp"/>
 
             </LinearLayout>
 
@@ -238,12 +238,12 @@
                 android:textStyle="bold"
                 android:background="#c0c0c0"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"/>
+                android:layout_height="46dp"/>
         </LinearLayout>
         <ListView
             android:id="@+id/host_list"
             android:layout_width="match_parent"
-            android:layout_height="225dp">
+            android:layout_height="wrap_content">
         </ListView>
     </LinearLayout>
 </RelativeLayout>
