@@ -209,14 +209,14 @@ public class JoinMeetingActivity extends FragmentActivity implements
     @Override
     public void onInfoWindowClick(Marker marker) {
         final String title = marker.getTitle();
+        meetingInfo = meetingInfoHashMap.get(title);
         new android.app.AlertDialog.Builder(this)
-                .setTitle(marker.getTitle())
-                .setMessage("Join this meeting?")
+                .setTitle(title)
+                .setMessage("Owner: " + meetingInfo.getOwnerName() + "\nOrganization: " + meetingInfo.getOrg() + "\n\nJoin this meeting?")
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 
                     public void onClick(DialogInterface dialog, int whichButton) {
                         Toast.makeText(JoinMeetingActivity.this, "Joining Meeting", Toast.LENGTH_SHORT).show();
-                        meetingInfo = meetingInfoHashMap.get(title);
                         finish();
                     }})
                 .setNegativeButton(android.R.string.no, null).show();
