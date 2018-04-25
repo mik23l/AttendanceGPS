@@ -2,6 +2,7 @@ package com.example.desve.attendancegps;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -13,6 +14,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -32,6 +34,7 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONArray;
@@ -48,18 +51,12 @@ public class JoinMeetingActivity extends FragmentActivity implements
         Response.Listener<String>,
         Response.ErrorListener,
         GoogleMap.OnMyLocationClickListener,
-        OnMapReadyCallback {
+        OnMapReadyCallback,
+        GoogleMap.OnInfoWindowClickListener {
 
     int MY_LOCATION_REQUEST_CODE = 99;
     private GoogleMap mMap;
 
-    Button button;
-    TextView noMeetingText;
-    Spinner spinner;
-    List<String> spinnerArray;
-    ArrayAdapter<String> adapter;
-
-    List<LatLng> meetingCoordinates;
     HashMap<String, MeetingInfo> meetingInfoHashMap;
     MeetingInfo meetingInfo;
 
@@ -70,17 +67,9 @@ public class JoinMeetingActivity extends FragmentActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_join_meeting);
 
-        button = findViewById(R.id.join_submit_button);
-        noMeetingText = findViewById(R.id.noMeeting);
-        spinner = findViewById(R.id.spinner);
-        spinnerArray =  new ArrayList<>();
-        adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, spinnerArray);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         serverAPI = new ServerAPI(this);
-//        serverAPI.getNearybyMeetings();
 
-        meetingCoordinates = new ArrayList<>();
         meetingInfoHashMap = new HashMap<>();
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -88,19 +77,6 @@ public class JoinMeetingActivity extends FragmentActivity implements
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-    }
-
-    public void onJoinMeeting (View view) {
-        Log.d("DEBUG", "selected item = " + spinner.getSelectedItem());
-        if (spinner.getSelectedItem() != null) {
-            String selectedMeeting = spinner.getSelectedItem().toString();
-            meetingInfo = meetingInfoHashMap.get(selectedMeeting);
-            Log.d("DEBUG", "meeting = " + meetingInfo);
-            finish();
-        }
-        else {
-            Toast.makeText(this, "No Meetings Available", Toast.LENGTH_SHORT);
-        }
     }
 
     @Override
@@ -138,6 +114,9 @@ public class JoinMeetingActivity extends FragmentActivity implements
                 mMap.setMapStyle(
                         MapStyleOptions.loadRawResourceStyle(
                                 this, R.raw.style_json));
+                // Set a listener for info window events.
+                mMap.setOnInfoWindowClickListener(this);
+
                 serverAPI.getNearbyMeetings(latLng);
 
             }
@@ -164,14 +143,12 @@ public class JoinMeetingActivity extends FragmentActivity implements
 
     @Override
     public void onMyLocationClick(@NonNull Location location) {
-        Toast.makeText(this, "Current location:\n" + location, Toast.LENGTH_LONG).show();
+
     }
 
     @Override
     public boolean onMyLocationButtonClick() {
-        Toast.makeText(this, "MyLocation button clicked", Toast.LENGTH_SHORT).show();
-        // Return false so that we don't consume the event and the default behavior still occurs
-        // (the camera animates to the user's current position).
+
         return false;
     }
 
@@ -179,56 +156,50 @@ public class JoinMeetingActivity extends FragmentActivity implements
 
     public void addMarkers() {
         // Iterate through list of meetings and place marker
-        Log.d("DEBUG", "" + meetingCoordinates.size());
 
-        for(int i = 0; i < meetingCoordinates.size(); i++) {
-            mMap.addMarker(new MarkerOptions().position(meetingCoordinates.get(i)).title(spinnerArray.get(i)).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));
-//            mMap.addCircle(new CircleOptions().center(meetingCoordinates.get(i)).radius(200));
+        Log.d("DEBUG", "HashMap size: " + meetingInfoHashMap.size());
+
+        if (meetingInfoHashMap.size() == 0) {
+            Log.d("DEBUG", "Displaying notification");
+
+            new android.app.AlertDialog.Builder(this)
+                    .setTitle("No meetings currently available!")
+                    .setNeutralButton(android.R.string.ok, null).show();
+
         }
+
+        for (MeetingInfo meetingInfo : meetingInfoHashMap.values()) {
+            Log.d("DEBUG", meetingInfo.getName());
+            Marker marker = mMap.addMarker(new MarkerOptions()
+                    .position(meetingInfo.getCoor())
+                    .title(meetingInfo.getName())
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));
+
+            marker.showInfoWindow();
+        }
+
     }
 
     @Override
     public void onResponse(String response) {
         try {
-            Log.d("DEBUG", "MapsActivity");
             JSONObject jsonObject = new JSONObject(response);
-            Log.d("DEBUG", jsonObject.toString());
 
             JSONArray list = jsonObject.optJSONArray("nearby");
 
-            Log.d("DEBUG", "Num meetings = " + list.length());
             for (int i = 0; i < list.length(); i++) {
                 JSONObject meeting = list.optJSONObject(i);
                 MeetingInfo m = new MeetingInfo(meeting);
                 meetingInfoHashMap.put(m.getName(), m);
-                spinnerArray.add(m.getName());
-                Log.d("DEBUG", "NAME = " + m.getName());
-                meetingCoordinates.add(m.getCoor());
             }
 
-            spinner.setAdapter(adapter);
+            Log.d("DEBUG", "HashMap size: " + meetingInfoHashMap.size());
+
             addMarkers();
-
-            if (list.length() == 0) {
-                button.setEnabled(false);
-                spinner.setVisibility(View.INVISIBLE);
-                noMeetingText.setVisibility(View.VISIBLE);
-            }
-            else {
-                button.setEnabled(true);
-                spinner.setVisibility(View.VISIBLE);
-                noMeetingText.setVisibility(View.INVISIBLE);
-            }
-
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-    }
-
-    @Override
-    public void onErrorResponse(VolleyError error) {
 
     }
 
@@ -241,4 +212,24 @@ public class JoinMeetingActivity extends FragmentActivity implements
         super.finish();
     }
 
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        final String title = marker.getTitle();
+        new android.app.AlertDialog.Builder(this)
+                .setTitle(marker.getTitle())
+                .setMessage("Join this meeting?")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        Toast.makeText(JoinMeetingActivity.this, "Joining Meeting", Toast.LENGTH_SHORT).show();
+                        meetingInfo = meetingInfoHashMap.get(title);
+                        finish();
+                    }})
+                .setNegativeButton(android.R.string.no, null).show();
+    }
+
+    @Override
+    public void onErrorResponse(VolleyError error) {
+
+    }
 }
