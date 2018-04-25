@@ -26,6 +26,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
@@ -49,6 +50,9 @@ public class JoinMeetingActivity extends FragmentActivity implements
 
     int MY_LOCATION_REQUEST_CODE = 99;
     private GoogleMap mMap;
+    Location currentLocation;
+
+    GPSManager gpsManager;
 
     List<MeetingInfo> meetingInfoList;
     List<View> meetingViews;
@@ -64,6 +68,7 @@ public class JoinMeetingActivity extends FragmentActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_join_meeting);
 
+        gpsManager = new GPSManager(this);
 
         serverAPI = new ServerAPI(this);
 
@@ -80,64 +85,45 @@ public class JoinMeetingActivity extends FragmentActivity implements
 
     }
 
+    public void updateCurrentLocation(Location currentLocation) {
+        this.currentLocation = currentLocation;
+        LatLng latLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+        if (mMap != null) {
+            mMap.clear();
+            //addmarkers();
+            mMap.addCircle(new CircleOptions().center(latLng).radius(200).strokeColor(Color.WHITE));
+            serverAPI.getNearbyMeetings(latLng);
+        }
+    }
+
     @Override
     public void onMapReady(GoogleMap map) {
         mMap = map;
 
-        Log.d("DEBUG", "onMapReady called...");
-        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) ==
-                PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) ==
-                        PackageManager.PERMISSION_GRANTED) {
-            mMap.setMyLocationEnabled(true);
-            mMap.setOnMyLocationButtonClickListener(this);
-            mMap.setOnMyLocationClickListener(this);
+        // This is fine
+        mMap.setMyLocationEnabled(true);
+        mMap.setOnMyLocationButtonClickListener(this);
+        mMap.setOnMyLocationClickListener(this);
 
-            LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        // Updates current location
+        gpsManager.register();
 
-            Criteria criteria = new Criteria();
+        if (currentLocation != null)
+        {
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), 13));
 
-            Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
-            if (location != null)
-            {
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 13));
+            CameraPosition cameraPosition = new CameraPosition.Builder()
+                    .target(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()))      // Sets the center of the map to location user
+                    .zoom(17)                   // Sets the zoom
+                    .bearing(90)                // Sets the orientation of the camera to east
+                    .tilt(40)                   // Sets the tilt of the camera to 30 degrees
+                    .build();                   // Creates a CameraPosition from the builder
+            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
-                CameraPosition cameraPosition = new CameraPosition.Builder()
-                        .target(new LatLng(location.getLatitude(), location.getLongitude()))      // Sets the center of the map to location user
-                        .zoom(17)                   // Sets the zoom
-                        .bearing(90)                // Sets the orientation of the camera to east
-                        .tilt(40)                   // Sets the tilt of the camera to 30 degrees
-                        .build();                   // Creates a CameraPosition from the builder
-                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+            mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.style_json));
+            // Set a listener for info window events.
+            mMap.setOnInfoWindowClickListener(this);
 
-                LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                mMap.addCircle(new CircleOptions().center(latLng).radius(100).strokeColor(Color.WHITE));
-                mMap.setMapStyle(
-                        MapStyleOptions.loadRawResourceStyle(
-                                this, R.raw.style_json));
-                // Set a listener for info window events.
-                mMap.setOnInfoWindowClickListener(this);
-
-                serverAPI.getNearbyMeetings(latLng);
-            }
-        } else {
-            // Show rationale and request permission.
-            ActivityCompat.requestPermissions(this, new String[] {
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION }, MY_LOCATION_REQUEST_CODE);
-        }
-
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        if (requestCode == MY_LOCATION_REQUEST_CODE) {
-            if (permissions.length == 1 && permissions[0] == Manifest.permission.ACCESS_FINE_LOCATION && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Log.d("DEBUG", "Approved");
-            } else {
-                // Permission was denied. Display an error message.
-                Log.d("DEBUG", "Denied");
-            }
         }
     }
 
@@ -202,6 +188,9 @@ public class JoinMeetingActivity extends FragmentActivity implements
     @Override
     public void onResponse(String response) {
         try {
+
+            meetingInfoList.clear();
+
             JSONObject jsonObject = new JSONObject(response);
 
             JSONArray list = jsonObject.optJSONArray("nearby");
@@ -276,4 +265,6 @@ public class JoinMeetingActivity extends FragmentActivity implements
         meetingInfo = null;
         finish();
     }
+
+
 }
