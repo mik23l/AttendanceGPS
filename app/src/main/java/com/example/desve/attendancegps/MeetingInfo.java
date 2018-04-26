@@ -52,6 +52,13 @@ public class MeetingInfo implements Serializable {
                 Log.d("DEBUG", "UserInfo = " + users);
             }
 
+            if (object.has("duration")) {
+                duration = object.getString("duration");
+            }
+            else {
+                duration = "";
+            }
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
