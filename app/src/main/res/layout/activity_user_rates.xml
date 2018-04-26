@@ -25,7 +25,7 @@
                 android:orientation="horizontal">
 
                 <Spinner
-                    android:id="@+id/attend_spin"
+                    android:id="@+id/org_spin"
                     android:layout_width="200dp"
                     android:layout_height="30dp"
                     android:layout_gravity="center">

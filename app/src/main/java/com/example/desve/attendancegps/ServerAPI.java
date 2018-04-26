@@ -27,6 +27,7 @@ public class ServerAPI {
     HostDetailsActivity hostDetailsActivity;
     JoinDetailsActivity joinDetailsActivity;
     WelcomeActivity welcomeActivity;
+    UserRatesActivity userRatesActivity;
 
     RequestQueue queue;
 
@@ -60,9 +61,14 @@ public class ServerAPI {
         queue = Volley.newRequestQueue(newUserActivity);
     }
 
-    public  ServerAPI(WelcomeActivity ma) {
+    public ServerAPI(WelcomeActivity ma) {
         welcomeActivity = ma;
         queue = Volley.newRequestQueue(welcomeActivity);
+    }
+
+    public ServerAPI(UserRatesActivity ma) {
+        userRatesActivity = ma;
+        queue = Volley.newRequestQueue(userRatesActivity);
     }
 
 
@@ -167,6 +173,25 @@ public class ServerAPI {
 
     public void endMeeting(String id) {
         StringRequest request = new StringRequest(Request.Method.GET, getURL() + "meeting/" + id + "/end_meeting", hostDetailsActivity, hostDetailsActivity);
+        queue.add(request);
+    }
+
+    public void getOwnerOrgs(String id) {
+        StringRequest request = new StringRequest(Request.Method.GET, getURL() + "data/hosted_orgs?owner=" + id, userRatesActivity, userRatesActivity);
+        queue.add(request);
+    }
+
+    public void getUserRates(String id, String org) {
+        StringRequest request;
+        if (org != null) {
+            request = new StringRequest(Request.Method.GET, getURL() +
+                    "data/hosted_orgs?owner=" + id + "&org=" + org, userRatesActivity, userRatesActivity);
+
+        }
+        else {
+            request = new StringRequest(Request.Method.GET, getURL() +
+                    "data/user_rates?owner=" + id, userRatesActivity, userRatesActivity);
+        }
         queue.add(request);
     }
 }
