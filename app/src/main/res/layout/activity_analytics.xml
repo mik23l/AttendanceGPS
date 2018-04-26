@@ -30,7 +30,7 @@
             <Button
                 android:id="@+id/attend_filter"
                 android:layout_width="wrap_content"
-                android:layout_height="40dp"
+                android:layout_height="38dp"
                 android:layout_marginLeft="15dp"
                 android:text="Filter"/>
         </LinearLayout>
@@ -146,7 +146,7 @@
             <Button
                 android:id="@+id/host_filter"
                 android:layout_width="wrap_content"
-                android:layout_height="40dp"
+                android:layout_height="38dp"
                 android:layout_marginLeft="15dp"
                 android:text="Filter"/>
         </LinearLayout>
@@ -163,17 +163,6 @@
                 <TextView
                     android:textSize="15dp"
                     android:id="@+id/avg_attend"/>
-            </TableRow>
-            <TableRow>
-                <TextView
-                    android:layout_width="176dp"
-                    android:layout_marginLeft="10dp"
-                    android:text="Average Duration:"
-                    android:textSize="15dp"
-                    android:textStyle="bold" />
-                <TextView
-                    android:textSize="15dp"
-                    android:id="@+id/avg_duration"/>
             </TableRow>
         </TableLayout>
         <LinearLayout

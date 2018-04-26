@@ -21,6 +21,9 @@ public class AnalyticsActivity extends Activity implements View.OnClickListener 
     Button host_filter;
     ListView host_list;
 
+    DatabaseManager databaseManager;
+    ServerAPI serverAPI;
+
     ArrayList<MeetingObject> meetingList = new ArrayList<>();
     List<String> organizationList = new ArrayList<String>();
 
