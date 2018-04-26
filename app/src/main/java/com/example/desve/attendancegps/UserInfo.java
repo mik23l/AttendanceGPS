@@ -14,6 +14,7 @@ public class UserInfo implements Serializable {
     String m_username;
     String m_password;
     String m_name;
+    int num_attended = 0;
 
     public UserInfo(String id, String username, String pass, String name) {
         m_id = id;
@@ -28,6 +29,10 @@ public class UserInfo implements Serializable {
             m_id = object.getString("id");
             m_username = object.getString("username");
             m_password = object.getString("password");
+            if (object.has("num_attended")) {
+                num_attended = object.getInt("num_attended");
+            }
+
         } catch (JSONException e) {
             e.printStackTrace();
         }

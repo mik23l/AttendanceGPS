@@ -1,9 +1,10 @@
 package com.example.desve.attendancegps;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -69,5 +70,13 @@ public class AnalyticsActivity extends Activity implements View.OnClickListener 
     @Override
     public void onClick(View view) {
 
+    }
+
+
+    // by sam
+    public void onClickAttendeeAverages(View view) {
+        Log.d("DEBUG", "Starting user rates activity");
+        Intent intent = new Intent(this, UserRatesActivity.class);
+        startActivity(intent);
     }
 }
