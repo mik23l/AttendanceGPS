@@ -185,7 +185,7 @@ public class ServerAPI {
         StringRequest request;
         if (org != null) {
             request = new StringRequest(Request.Method.GET, getURL() +
-                    "data/hosted_orgs?owner=" + id + "&org=" + org, userRatesActivity, userRatesActivity);
+                    "data/user_rates?owner=" + id + "&org=" + org, userRatesActivity, userRatesActivity);
 
         }
         else {

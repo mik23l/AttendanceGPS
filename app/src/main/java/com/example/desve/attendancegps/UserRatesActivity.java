@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -27,11 +27,12 @@ public class UserRatesActivity extends Activity implements Response.Listener<Str
 
     Spinner orgSpinner;
     TextView meetingCount;
-    LinearLayout userLayout;
+    ListView userListView;
 
     List<String> organizations;
-    List<UserInfo> userInfoRates;
-    int num_meetings = 0;
+    ArrayList<UserInfo> userInfoRates;
+
+    int num_meetings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +41,7 @@ public class UserRatesActivity extends Activity implements Response.Listener<Str
 
         orgSpinner = findViewById(R.id.org_spin);
         meetingCount = findViewById(R.id.meeting_count);
-        userLayout = findViewById(R.id.user_layout);
+        userListView = findViewById(R.id.user_list);
 
         serverAPI = new ServerAPI(this);
         databaseManager = new DatabaseManager(this);
@@ -65,7 +66,8 @@ public class UserRatesActivity extends Activity implements Response.Listener<Str
     }
 
     private void populateUserList() {
-
+        UserInfoAdapter userInfoAdapter = new UserInfoAdapter(this,R.layout.user_adapter_layout, userInfoRates, num_meetings);
+        userListView.setAdapter(userInfoAdapter);
     }
 
     public void onClickFilter(View view) {
@@ -92,6 +94,8 @@ public class UserRatesActivity extends Activity implements Response.Listener<Str
             if (jsonObject.has("organization")) {
                 Log.d("DEBUG", "orgs list");
                 JSONArray jsonList = jsonObject.getJSONArray("organization");
+                organizations.clear();
+                organizations.add("No Filter");
                 for (int i=0; i<jsonList.length(); i++) {
                     organizations.add(jsonList.getString(i));
                 }
@@ -100,9 +104,13 @@ public class UserRatesActivity extends Activity implements Response.Listener<Str
             else {
                 Log.d("DEBUG", "user info stuff");
                 num_meetings = jsonObject.getJSONArray("meetings").length();
-                meetingCount.setText(num_meetings);
-
+                meetingCount.setText(String.valueOf(num_meetings));
                 userInfoRates.clear();
+                JSONArray users = jsonObject.getJSONArray("users");
+                for (int i=0; i< users.length(); i++){
+                    userInfoRates.add(new UserInfo(users.getJSONObject(i)));
+                }
+                populateUserList();
             }
 
         } catch (JSONException e) {
