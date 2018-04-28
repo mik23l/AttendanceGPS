@@ -9,69 +9,105 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
+
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class AnalyticsActivity extends Activity implements View.OnClickListener {
+public class AnalyticsActivity extends Activity implements Response.Listener<String>, Response.ErrorListener {
 
     Spinner attend_spin;
-    Button attend_filter;
     ListView attend_list;
     Spinner host_spin;
-    Button host_filter;
     ListView host_list;
+    TextView avg_attend;
 
     DatabaseManager databaseManager;
     ServerAPI serverAPI;
+    UserInfo userInfo;
+    MeetingInfo meetingInfo;
 
-    ArrayList<MeetingObject> meetingList = new ArrayList<>();
-    List<String> organizationList = new ArrayList<String>();
+    ArrayList<MeetingObject> meetingAttendList;
+    ArrayList<MeetingObject> meetingHostList;
+    List<String> orgAttendList;
+    List<String> orgHostList;
+
+    int avg_attendees;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_analytics);
+
         attend_spin=(Spinner)findViewById(R.id.attend_spin);
-        attend_filter=(Button)findViewById(R.id.attend_filter);
         attend_list=(ListView)findViewById(R.id.attend_list);
         host_spin=(Spinner)findViewById(R.id.host_spin);
-        host_filter=(Button)findViewById(R.id.host_filter);
         host_list=(ListView)findViewById(R.id.host_list);
+        avg_attend=(TextView)findViewById(R.id.avg_attend);
 
-        attend_filter.setOnClickListener(this);
-        host_filter.setOnClickListener(this);
+        serverAPI = new ServerAPI(this);
+        databaseManager = new DatabaseManager(this);
+        userInfo = databaseManager.getUserFromDB();
+        Intent intent = getIntent();
+        meetingInfo = (MeetingInfo) intent.getSerializableExtra("MEETING");
 
-        // Create the Meeting object
-        MeetingObject meeting1 = new MeetingObject("Meeting 1", "CS 3714", "4/25/2018", "1 hr 20 min", "45");
-        MeetingObject meeting2 = new MeetingObject("Meeting 1", "CS 3714", "4/25/2018", "1 hr 20 min", "45");
-        MeetingObject meeting3 = new MeetingObject("Meeting 1", "CS 3714", "4/25/2018", "1 hr 20 min", "45");
-        MeetingObject meeting4 = new MeetingObject("Meeting 1", "CS 3714", "4/25/2018", "1 hr 20 min", "45");
+        meetingAttendList = new ArrayList<>();
+        meetingHostList = new ArrayList<>();
+        orgAttendList = new ArrayList<>();
+        orgAttendList.add("No Filter");
+        orgHostList = new ArrayList<>();
+        orgHostList.add("No Filter");
 
-        // Add the Meeting object to an ArrayList
-        meetingList.add(meeting1);
-        meetingList.add(meeting2);
-        meetingList.add(meeting3);
-        meetingList.add(meeting4);
-
-        MeetingListAdapter adapter = new MeetingListAdapter(this,R.layout.adapter_view_layout, meetingList);
-        attend_list.setAdapter(adapter);
-        host_list.setAdapter(adapter);
-
-        organizationList.add("CS 3714");
-        organizationList.add("CHEM 1036");
-        organizationList.add("ECE 3574");
-
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, organizationList);
-        attend_spin.setAdapter(dataAdapter);
-        host_spin.setAdapter(dataAdapter);
+        serverAPI.getOwnerOrgs(userInfo.m_id);
+        serverAPI.getAttendOrgs(userInfo.m_id);
+        serverAPI.getHostMeetings(userInfo.m_id, null);
+        serverAPI.getAttendMeetings(userInfo.m_id, null);
     }
 
-    @Override
-    public void onClick(View view) {
-
+    private void populateHostSpinner() {
+        ArrayAdapter<String> orgHostAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, orgHostList);
+        host_spin.setAdapter(orgHostAdapter);
+    }
+    private void populateAttendSpinner() {
+        ArrayAdapter<String> orgAttendAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, orgAttendList);
+        attend_spin.setAdapter(orgAttendAdapter);
     }
 
+    private void populateHostList() {
+        MeetingListAdapter hostadapter = new MeetingListAdapter(this,R.layout.adapter_view_layout, meetingHostList);
+        host_list.setAdapter(hostadapter);
+    }
+    private void populateAttendList() {
+        MeetingListAdapter attendadapter = new MeetingListAdapter(this,R.layout.adapter_view_layout, meetingAttendList);
+        attend_list.setAdapter(attendadapter);
+    }
+
+    public void onClickFilterAttend(View view) {
+        Log.d("DEBUG", "Filter attended meetings");
+        String orgfilter = (String) attend_spin.getSelectedItem();
+        if (orgfilter.equals("No Filter")) {
+            serverAPI.getAttendMeetings(userInfo.m_id, null);
+        } else {
+            serverAPI.getAttendMeetings(userInfo.m_id,orgfilter);
+        }
+    }
+    public void onClickFilterHost(View view) {
+        Log.d("DEBUG", "Filter host meetings");
+        String orgfilter = (String) attend_spin.getSelectedItem();
+        if (orgfilter.equals("No Filter")) {
+            serverAPI.getHostMeetings(userInfo.m_id, null);
+        } else {
+            serverAPI.getHostMeetings(userInfo.m_id, orgfilter);
+        }
+    }
 
     // by sam
     public void onClickAttendeeAverages(View view) {
@@ -79,4 +115,69 @@ public class AnalyticsActivity extends Activity implements View.OnClickListener 
         Intent intent = new Intent(this, UserRatesActivity.class);
         startActivity(intent);
     }
+
+    @Override
+    public void onErrorResponse(VolleyError error) {
+
+    }
+
+    @Override
+    public void onResponse(String response) {
+        /*
+        try {
+            JSONObject jsonObject = new JSONObject(response);
+            Log.d("DEBUG", jsonObject.toString());
+
+            if(jsonObject.has("host organization")) {
+                Log.d("DEBUG", "host orgs list");
+                JSONArray jsonList = jsonObject.getJSONArray("host organization");
+                orgHostList.clear();
+                orgHostList.add("No Filter");
+                for(int i = 0; i<jsonList.length();i++) {
+                    orgHostList.add(jsonList.getString(i));
+                }
+                populateHostSpinner();
+            } else {
+                Log.d("DEBUG", "host meeting");
+                avg_attendees = 0;
+                avg_attend.setText(String.valueOf(avg_attendees));
+                meetingHostList.clear();
+                JSONArray host = jsonObject.getJSONArray("host");
+                for(int i = 0; i<host.length(); i++) {
+                    //meetingHostList.add(new UserInfo(host.getJSONObject(i)));
+                }
+                populateHostList();
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            JSONObject jsonObject = new JSONObject(response);
+            Log.d("DEBUG", jsonObject.toString());
+
+            if(jsonObject.has("attend organization")) {
+                Log.d("DEBUG", "attend orgs list");
+                JSONArray jsonList = jsonObject.getJSONArray("attend organization");
+                orgAttendList.clear();
+                orgAttendList.add("No Filter");
+                for(int i = 0; i<jsonList.length();i++) {
+                    orgAttendList.add(jsonList.getString(i));
+                }
+                populateAttendSpinner();
+            } else {
+                Log.d("DEBUG", "attend meeting");
+                meetingAttendList.clear();
+                JSONArray attend = jsonObject.getJSONArray("attend");
+                for(int i = 0; i<attend.length(); i++) {
+                    //meetingHostList.add(new UserInfo(host.getJSONObject(i)));
+                }
+                populateAttendList();
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        */
+    }
+
 }

@@ -21,7 +21,6 @@ public class MeetingInfo implements Serializable {
     String id;
     String name;
     String startDate;
-    String endDate;
     String duration;
     List<UserInfo> users;
     Double lat, lon;

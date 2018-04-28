@@ -28,6 +28,7 @@ public class ServerAPI {
     JoinDetailsActivity joinDetailsActivity;
     WelcomeActivity welcomeActivity;
     UserRatesActivity userRatesActivity;
+    AnalyticsActivity analyticsActivity;
 
     RequestQueue queue;
 
@@ -71,6 +72,10 @@ public class ServerAPI {
         queue = Volley.newRequestQueue(userRatesActivity);
     }
 
+    public ServerAPI(AnalyticsActivity ma) {
+        analyticsActivity = ma;
+        queue = Volley.newRequestQueue(analyticsActivity);
+    }
 
 
 //    public void getUsers() {
@@ -178,6 +183,13 @@ public class ServerAPI {
 
     public void getOwnerOrgs(String id) {
         StringRequest request = new StringRequest(Request.Method.GET, getURL() + "data/hosted_orgs?owner=" + id, userRatesActivity, userRatesActivity);
+        StringRequest request2 = new StringRequest(Request.Method.GET, getURL() + "data/hosted_orgs?owner=" + id, analyticsActivity, analyticsActivity);
+        queue.add(request);
+        queue.add(request2);
+    }
+
+    public void getAttendOrgs(String id) {
+        StringRequest request = new StringRequest(Request.Method.GET,getURL() + "data/attended_orgs?owner=" + id, analyticsActivity, analyticsActivity);
         queue.add(request);
     }
 
@@ -191,6 +203,30 @@ public class ServerAPI {
         else {
             request = new StringRequest(Request.Method.GET, getURL() +
                     "data/user_rates?owner=" + id, userRatesActivity, userRatesActivity);
+        }
+        queue.add(request);
+    }
+
+    public void getAttendMeetings(String id, String  org) {
+        StringRequest request;
+        if (org != null) {
+            request = new StringRequest(Request.Method.GET, getURL() +
+                    "data/i_attended?owner=" + id + "&org=" + org, analyticsActivity, analyticsActivity);
+        } else {
+            request = new StringRequest(Request.Method.GET, getURL() +
+                    "data/i_attended?owner=" + id, analyticsActivity, analyticsActivity);
+        }
+        queue.add(request);
+    }
+
+    public void getHostMeetings(String id, String  org) {
+        StringRequest request;
+        if (org != null) {
+            request = new StringRequest(Request.Method.GET, getURL() +
+                    "data/i_hosted?owner=" + id + "&org=" + org, analyticsActivity, analyticsActivity);
+        } else {
+            request = new StringRequest(Request.Method.GET, getURL() +
+                    "data/i_hosted?owner=" + id, analyticsActivity, analyticsActivity);
         }
         queue.add(request);
     }
