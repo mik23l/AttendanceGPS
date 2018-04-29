@@ -59,7 +59,7 @@ public class MeetingInfo implements Serializable {
                 duration = object.getString("duration");
             }
             else {
-                duration = "";
+                duration = "On going";
             }
 
         } catch (JSONException e) {
