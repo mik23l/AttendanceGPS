@@ -24,6 +24,7 @@ public class MeetingListAdapter extends ArrayAdapter<MeetingObject> {
         super(context, resource, objects);
         mContext = context;
         mResource = resource;
+
     }
 
     @NonNull

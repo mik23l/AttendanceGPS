@@ -33,7 +33,6 @@ public class AnalyticsActivity extends Activity implements Response.Listener<Str
     DatabaseManager databaseManager;
     ServerAPI serverAPI;
     UserInfo userInfo;
-    MeetingInfo meetingInfo;
 
     ArrayList<MeetingObject> meetingAttendList;
     ArrayList<MeetingObject> meetingHostList;
@@ -55,9 +54,9 @@ public class AnalyticsActivity extends Activity implements Response.Listener<Str
 
         serverAPI = new ServerAPI(this);
         databaseManager = new DatabaseManager(this);
+        databaseManager.open();
         userInfo = databaseManager.getUserFromDB();
-        Intent intent = getIntent();
-        meetingInfo = (MeetingInfo) intent.getSerializableExtra("MEETING");
+        databaseManager.close();
 
         meetingAttendList = new ArrayList<>();
         meetingHostList = new ArrayList<>();
@@ -66,10 +65,13 @@ public class AnalyticsActivity extends Activity implements Response.Listener<Str
         orgHostList = new ArrayList<>();
         orgHostList.add("No Filter");
 
+
         serverAPI.getOwnerOrgs(userInfo.m_id);
+        /*
         serverAPI.getAttendOrgs(userInfo.m_id);
         serverAPI.getHostMeetings(userInfo.m_id, null);
         serverAPI.getAttendMeetings(userInfo.m_id, null);
+        */
     }
 
     private void populateHostSpinner() {
@@ -91,7 +93,7 @@ public class AnalyticsActivity extends Activity implements Response.Listener<Str
     }
 
     public void onClickFilterAttend(View view) {
-        Log.d("DEBUG", "Filter attended meetings");
+
         String orgfilter = (String) attend_spin.getSelectedItem();
         if (orgfilter.equals("No Filter")) {
             serverAPI.getAttendMeetings(userInfo.m_id, null);
@@ -100,8 +102,7 @@ public class AnalyticsActivity extends Activity implements Response.Listener<Str
         }
     }
     public void onClickFilterHost(View view) {
-        Log.d("DEBUG", "Filter host meetings");
-        String orgfilter = (String) attend_spin.getSelectedItem();
+        String orgfilter = (String) host_spin.getSelectedItem();
         if (orgfilter.equals("No Filter")) {
             serverAPI.getHostMeetings(userInfo.m_id, null);
         } else {
@@ -116,6 +117,7 @@ public class AnalyticsActivity extends Activity implements Response.Listener<Str
         startActivity(intent);
     }
 
+
     @Override
     public void onErrorResponse(VolleyError error) {
 
@@ -127,10 +129,9 @@ public class AnalyticsActivity extends Activity implements Response.Listener<Str
         try {
             JSONObject jsonObject = new JSONObject(response);
             Log.d("DEBUG", jsonObject.toString());
-
-            if(jsonObject.has("host organization")) {
+            if(jsonObject.has("organization")) {
                 Log.d("DEBUG", "host orgs list");
-                JSONArray jsonList = jsonObject.getJSONArray("host organization");
+                JSONArray jsonList = jsonObject.getJSONArray("organization");
                 orgHostList.clear();
                 orgHostList.add("No Filter");
                 for(int i = 0; i<jsonList.length();i++) {
@@ -151,14 +152,13 @@ public class AnalyticsActivity extends Activity implements Response.Listener<Str
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
+        //TODO: response from attend meetings
         try {
             JSONObject jsonObject = new JSONObject(response);
             Log.d("DEBUG", jsonObject.toString());
-
-            if(jsonObject.has("attend organization")) {
+            if(jsonObject.has("organization")) {
                 Log.d("DEBUG", "attend orgs list");
-                JSONArray jsonList = jsonObject.getJSONArray("attend organization");
+                JSONArray jsonList = jsonObject.getJSONArray("organization");
                 orgAttendList.clear();
                 orgAttendList.add("No Filter");
                 for(int i = 0; i<jsonList.length();i++) {
@@ -178,6 +178,7 @@ public class AnalyticsActivity extends Activity implements Response.Listener<Str
             e.printStackTrace();
         }
         */
+
     }
 
 }

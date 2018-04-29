@@ -216,7 +216,7 @@ public class ServerAPI {
             request = new StringRequest(Request.Method.GET, getURL() +
                     "data/i_attended?owner=" + id, analyticsActivity, analyticsActivity);
         }
-        queue.add(request);
+       queue.add(request);
     }
 
     public void getHostMeetings(String id, String  org) {
