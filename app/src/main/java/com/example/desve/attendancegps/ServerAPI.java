@@ -183,8 +183,11 @@ public class ServerAPI {
 
     public void getOwnerOrgs(String id) {
         StringRequest request = new StringRequest(Request.Method.GET, getURL() + "data/hosted_orgs?owner=" + id, userRatesActivity, userRatesActivity);
-        StringRequest request2 = new StringRequest(Request.Method.GET, getURL() + "data/hosted_orgs?owner=" + id, analyticsActivity, analyticsActivity);
         queue.add(request);
+    }
+
+    public void getOwnerOrgs2(String id) {
+        StringRequest request2 = new StringRequest(Request.Method.GET, getURL() + "data/hosted_orgs?owner=" + id, analyticsActivity, analyticsActivity);
         queue.add(request2);
     }
 

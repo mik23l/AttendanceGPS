@@ -66,7 +66,7 @@ public class AnalyticsActivity extends Activity implements Response.Listener<Str
         orgHostList.add("No Filter");
 
 
-        serverAPI.getOwnerOrgs(userInfo.m_id);
+        serverAPI.getOwnerOrgs2(userInfo.m_id);
         /*
         serverAPI.getAttendOrgs(userInfo.m_id);
         serverAPI.getHostMeetings(userInfo.m_id, null);
