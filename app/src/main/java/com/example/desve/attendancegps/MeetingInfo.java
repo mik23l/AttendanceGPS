@@ -57,8 +57,7 @@ public class MeetingInfo implements Serializable {
 
             if (object.has("duration")) {
                 duration = object.getString("duration");
-            }
-            else {
+            } else {
                 duration = "On going";
             }
 

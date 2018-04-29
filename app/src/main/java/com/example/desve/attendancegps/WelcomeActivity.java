@@ -119,7 +119,6 @@ public class WelcomeActivity extends Activity implements Response.Listener<Strin
 
     // On analytics button clicked
     public void analytics(View view) {
-        // FIXME Need to start analytics activity here
         Intent myIntent = new Intent(WelcomeActivity.this, AnalyticsActivity.class);
         WelcomeActivity.this.startActivity(myIntent);
     }
