@@ -192,7 +192,7 @@ public class ServerAPI {
     }
 
     public void getAttendOrgs(String id) {
-        StringRequest request = new StringRequest(Request.Method.GET,getURL() + "data/attended_orgs?owner=" + id, analyticsActivity, analyticsActivity);
+        StringRequest request = new StringRequest(Request.Method.GET,getURL() + "data/attended_orgs?user=" + id, analyticsActivity, analyticsActivity);
         queue.add(request);
     }
 
@@ -214,10 +214,10 @@ public class ServerAPI {
         StringRequest request;
         if (org != null) {
             request = new StringRequest(Request.Method.GET, getURL() +
-                    "data/i_attended?owner=" + id + "&org=" + org, analyticsActivity, analyticsActivity);
+                    "data/i_attended?user=" + id + "&org=" + org, analyticsActivity, analyticsActivity);
         } else {
             request = new StringRequest(Request.Method.GET, getURL() +
-                    "data/i_attended?owner=" + id, analyticsActivity, analyticsActivity);
+                    "data/i_attended?user=" + id, analyticsActivity, analyticsActivity);
         }
        queue.add(request);
     }

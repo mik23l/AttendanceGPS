@@ -33,6 +33,7 @@ public class AnalyticsActivity extends Activity implements Response.Listener<Str
     DatabaseManager databaseManager;
     ServerAPI serverAPI;
     UserInfo userInfo;
+    MeetingInfo meetingInfo;
 
     ArrayList<MeetingObject> meetingAttendList;
     ArrayList<MeetingObject> meetingHostList;
@@ -62,24 +63,25 @@ public class AnalyticsActivity extends Activity implements Response.Listener<Str
         meetingHostList = new ArrayList<>();
         orgAttendList = new ArrayList<>();
         orgAttendList.add("No Filter");
+        populateAttendSpinner();
         orgHostList = new ArrayList<>();
         orgHostList.add("No Filter");
-
+        populateHostSpinner();
 
         serverAPI.getOwnerOrgs2(userInfo.m_id);
-        /*
         serverAPI.getAttendOrgs(userInfo.m_id);
         serverAPI.getHostMeetings(userInfo.m_id, null);
         serverAPI.getAttendMeetings(userInfo.m_id, null);
-        */
     }
 
     private void populateHostSpinner() {
         ArrayAdapter<String> orgHostAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, orgHostList);
+        orgHostAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         host_spin.setAdapter(orgHostAdapter);
     }
     private void populateAttendSpinner() {
         ArrayAdapter<String> orgAttendAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, orgAttendList);
+        orgAttendAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         attend_spin.setAdapter(orgAttendAdapter);
     }
 
@@ -93,7 +95,6 @@ public class AnalyticsActivity extends Activity implements Response.Listener<Str
     }
 
     public void onClickFilterAttend(View view) {
-
         String orgfilter = (String) attend_spin.getSelectedItem();
         if (orgfilter.equals("No Filter")) {
             serverAPI.getAttendMeetings(userInfo.m_id, null);
@@ -117,7 +118,6 @@ public class AnalyticsActivity extends Activity implements Response.Listener<Str
         startActivity(intent);
     }
 
-
     @Override
     public void onErrorResponse(VolleyError error) {
 
@@ -125,60 +125,34 @@ public class AnalyticsActivity extends Activity implements Response.Listener<Str
 
     @Override
     public void onResponse(String response) {
-        /*
         try {
             JSONObject jsonObject = new JSONObject(response);
             Log.d("DEBUG", jsonObject.toString());
-            if(jsonObject.has("organization")) {
-                Log.d("DEBUG", "host orgs list");
-                JSONArray jsonList = jsonObject.getJSONArray("organization");
-                orgHostList.clear();
-                orgHostList.add("No Filter");
-                for(int i = 0; i<jsonList.length();i++) {
-                    orgHostList.add(jsonList.getString(i));
-                }
-                populateHostSpinner();
-            } else {
-                Log.d("DEBUG", "host meeting");
-                avg_attendees = 0;
-                avg_attend.setText(String.valueOf(avg_attendees));
-                meetingHostList.clear();
-                JSONArray host = jsonObject.getJSONArray("host");
-                for(int i = 0; i<host.length(); i++) {
-                    //meetingHostList.add(new UserInfo(host.getJSONObject(i)));
-                }
-                populateHostList();
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        //TODO: response from attend meetings
-        try {
-            JSONObject jsonObject = new JSONObject(response);
-            Log.d("DEBUG", jsonObject.toString());
-            if(jsonObject.has("organization")) {
+
+            if(jsonObject.has("attended")) {
                 Log.d("DEBUG", "attend orgs list");
-                JSONArray jsonList = jsonObject.getJSONArray("organization");
+                JSONArray jsonList = jsonObject.getJSONArray("attended");
                 orgAttendList.clear();
                 orgAttendList.add("No Filter");
                 for(int i = 0; i<jsonList.length();i++) {
                     orgAttendList.add(jsonList.getString(i));
                 }
                 populateAttendSpinner();
-            } else {
-                Log.d("DEBUG", "attend meeting");
-                meetingAttendList.clear();
-                JSONArray attend = jsonObject.getJSONArray("attend");
-                for(int i = 0; i<attend.length(); i++) {
-                    //meetingHostList.add(new UserInfo(host.getJSONObject(i)));
-                }
-                populateAttendList();
             }
+
+            if(jsonObject.has("hosted")) {
+                Log.d("DEBUG", "hosted orgs list");
+                JSONArray jsonList = jsonObject.getJSONArray("hosted");
+                orgHostList.clear();
+                orgHostList.add("No Filter");
+                for(int i = 0; i<jsonList.length();i++) {
+                    orgHostList.add(jsonList.getString(i));
+                }
+                populateHostSpinner();
+            }
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        */
-
     }
-
 }
