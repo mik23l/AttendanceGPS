@@ -91,7 +91,7 @@ public class UserRatesActivity extends Activity implements Response.Listener<Str
             JSONObject jsonObject = new JSONObject(response);
             Log.d("DEBUG", jsonObject.toString());
 
-            if (jsonObject.has("organization")) {
+            if (jsonObject.has("hosted")) {
                 Log.d("DEBUG", "orgs list");
                 JSONArray jsonList = jsonObject.getJSONArray("organization");
                 organizations.clear();
