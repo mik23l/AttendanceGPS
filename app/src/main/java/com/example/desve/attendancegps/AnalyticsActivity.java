@@ -94,6 +94,7 @@ public class AnalyticsActivity extends Activity implements Response.Listener<Str
 
 
     private void populateHostList() {
+        HostList.clear();
         for(MeetingInfo meetingInfo : meetingHostList) {
             MeetingObject meeting = new MeetingObject(meetingInfo.getName(), meetingInfo.getOrg(), meetingInfo.getStartDate(), meetingInfo.getDuration(), meetingInfo.getNum_users());
             HostList.add(meeting);
@@ -102,6 +103,7 @@ public class AnalyticsActivity extends Activity implements Response.Listener<Str
         host_list.setAdapter(hostadapter);
     }
     private void populateAttendList() {
+        AttendList.clear();
         for(MeetingInfo meetingInfo : meetingAttendList) {
             MeetingObject meeting = new MeetingObject(meetingInfo.getName(), meetingInfo.getOrg(), meetingInfo.getStartDate(), meetingInfo.getDuration(), meetingInfo.getNum_users());
             AttendList.add(meeting);
