@@ -50,6 +50,9 @@ public class MeetingInfo implements Serializable {
                     users.add(userInfo);
                 }
                 Log.d("DEBUG", "UserInfo = " + users);
+                num_users = Integer.toString(users.size());
+            } else {
+                num_users = "--";
             }
 
             if (object.has("duration")) {
@@ -123,7 +126,5 @@ public class MeetingInfo implements Serializable {
 
     public String getNum_users() { return num_users; }
 
-    public void setNum_users(String num_users) {
-        num_users = Integer.toString(users.size());
-    }
+    public void setNum_users(String num_users) { this.num_users = num_users; }
 }
