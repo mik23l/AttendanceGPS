@@ -35,8 +35,10 @@ public class AnalyticsActivity extends Activity implements Response.Listener<Str
     UserInfo userInfo;
     MeetingInfo meetingInfo;
 
-    ArrayList<MeetingObject> meetingAttendList;
-    ArrayList<MeetingObject> meetingHostList;
+    ArrayList<MeetingInfo> meetingAttendList;
+    ArrayList<MeetingInfo> meetingHostList;
+    ArrayList<MeetingObject> AttendList;
+    ArrayList<MeetingObject> HostList;
     List<String> orgAttendList;
     List<String> orgHostList;
 
@@ -61,6 +63,8 @@ public class AnalyticsActivity extends Activity implements Response.Listener<Str
 
         meetingAttendList = new ArrayList<>();
         meetingHostList = new ArrayList<>();
+        AttendList = new ArrayList<>();
+        HostList = new ArrayList<>();
         orgAttendList = new ArrayList<>();
         orgAttendList.add("No Filter");
         populateAttendSpinner();
@@ -72,6 +76,9 @@ public class AnalyticsActivity extends Activity implements Response.Listener<Str
         serverAPI.getAttendOrgs(userInfo.m_id);
         serverAPI.getHostMeetings(userInfo.m_id, null);
         serverAPI.getAttendMeetings(userInfo.m_id, null);
+
+        Intent intent = getIntent();
+        meetingInfo = (MeetingInfo) intent.getSerializableExtra("MEETING");
     }
 
     private void populateHostSpinner() {
@@ -85,14 +92,24 @@ public class AnalyticsActivity extends Activity implements Response.Listener<Str
         attend_spin.setAdapter(orgAttendAdapter);
     }
 
+
     private void populateHostList() {
-        MeetingListAdapter hostadapter = new MeetingListAdapter(this,R.layout.adapter_view_layout, meetingHostList);
+        for(MeetingInfo meetingInfo : meetingHostList) {
+            MeetingObject meeting = new MeetingObject(meetingInfo.getName(), meetingInfo.getOrg(), meetingInfo.getStartDate(), meetingInfo.getDuration(), meetingInfo.getNum_users());
+            HostList.add(meeting);
+        }
+        MeetingListAdapter hostadapter = new MeetingListAdapter(this,R.layout.adapter_view_layout, HostList);
         host_list.setAdapter(hostadapter);
     }
     private void populateAttendList() {
-        MeetingListAdapter attendadapter = new MeetingListAdapter(this,R.layout.adapter_view_layout, meetingAttendList);
+        for(MeetingInfo meetingInfo : meetingAttendList) {
+            MeetingObject meeting = new MeetingObject(meetingInfo.getName(), meetingInfo.getOrg(), meetingInfo.getStartDate(), meetingInfo.getDuration(), meetingInfo.getNum_users());
+            AttendList.add(meeting);
+        }
+        MeetingListAdapter attendadapter = new MeetingListAdapter(this,R.layout.adapter_view_layout, AttendList);
         attend_list.setAdapter(attendadapter);
     }
+
 
     public void onClickFilterAttend(View view) {
         String orgfilter = (String) attend_spin.getSelectedItem();
@@ -149,6 +166,29 @@ public class AnalyticsActivity extends Activity implements Response.Listener<Str
                     orgHostList.add(jsonList.getString(i));
                 }
                 populateHostSpinner();
+            }
+
+            if(jsonObject.has("meetings_attended")) {
+                Log.d("DEBUG", "attended meetings");
+                meetingAttendList.clear();
+                JSONArray list = jsonObject.optJSONArray("meetings_attended");
+                for(int i = 0; i <list.length(); i++) {
+                    JSONObject attend_meeting = list.optJSONObject(i);
+                    MeetingInfo m = new MeetingInfo(attend_meeting);
+                    meetingAttendList.add(m);
+                }
+                populateAttendList();
+            }
+            if(jsonObject.has("meetings_hosted")) {
+                Log.d("DEBUG", "hosted meetings");
+                meetingHostList.clear();
+                JSONArray list = jsonObject.optJSONArray("meetings_hosted");
+                for(int i = 0; i <list.length(); i++) {
+                    JSONObject attend_meeting = list.optJSONObject(i);
+                    MeetingInfo m = new MeetingInfo(attend_meeting);
+                    meetingHostList.add(m);
+                }
+                populateHostList();
             }
 
         } catch (JSONException e) {

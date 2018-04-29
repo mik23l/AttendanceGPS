@@ -22,6 +22,7 @@ public class MeetingInfo implements Serializable {
     String name;
     String startDate;
     String duration;
+    String num_users;
     List<UserInfo> users;
     Double lat, lon;
     String owner;
@@ -114,5 +115,15 @@ public class MeetingInfo implements Serializable {
 
     public String getOwnerName() {
         return owner_data.m_name;
+    }
+
+    public String getDuration() { return duration; }
+
+    public void setDuration(String duration) { this.duration = duration; }
+
+    public String getNum_users() { return num_users; }
+
+    public void setNum_users(String num_users) {
+        num_users = Integer.toString(users.size());
     }
 }
