@@ -162,7 +162,8 @@
                     android:textStyle="bold" />
                 <TextView
                     android:textSize="15dp"
-                    android:id="@+id/avg_attend"/>
+                    android:id="@+id/avg_attend"
+                    android:text="0"/>
             </TableRow>
         </TableLayout>
         <LinearLayout

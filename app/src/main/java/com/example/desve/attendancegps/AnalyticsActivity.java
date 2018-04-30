@@ -43,6 +43,8 @@ public class AnalyticsActivity extends Activity implements Response.Listener<Str
     List<String> orgHostList;
 
     int avg_attendees;
+    int total_meetings;
+    int total_users;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,13 +94,16 @@ public class AnalyticsActivity extends Activity implements Response.Listener<Str
         attend_spin.setAdapter(orgAttendAdapter);
     }
 
-
     private void populateHostList() {
+        total_users = 0;
         HostList.clear();
         for(MeetingInfo meetingInfo : meetingHostList) {
             MeetingObject meeting = new MeetingObject(meetingInfo.getName(), meetingInfo.getOrg(), meetingInfo.getStartDate(), meetingInfo.getDuration(), meetingInfo.getNum_users());
             HostList.add(meeting);
+            total_users = total_users + (Integer.parseInt(meetingInfo.getNum_users()));
         }
+        avg_attendees = total_users/total_meetings;
+        avg_attend.setText(String.valueOf(avg_attendees));
         MeetingListAdapter hostadapter = new MeetingListAdapter(this,R.layout.adapter_view_layout, HostList);
         host_list.setAdapter(hostadapter);
     }
@@ -107,6 +112,7 @@ public class AnalyticsActivity extends Activity implements Response.Listener<Str
         for(MeetingInfo meetingInfo : meetingAttendList) {
             MeetingObject meeting = new MeetingObject(meetingInfo.getName(), meetingInfo.getOrg(), meetingInfo.getStartDate(), meetingInfo.getDuration(), meetingInfo.getNum_users());
             AttendList.add(meeting);
+
         }
         MeetingListAdapter attendadapter = new MeetingListAdapter(this,R.layout.adapter_view_layout, AttendList);
         attend_list.setAdapter(attendadapter);
@@ -183,6 +189,7 @@ public class AnalyticsActivity extends Activity implements Response.Listener<Str
             }
             if(jsonObject.has("meetings_hosted")) {
                 Log.d("DEBUG", "hosted meetings");
+                total_meetings = jsonObject.getJSONArray("meetings_hosted").length();
                 meetingHostList.clear();
                 JSONArray list = jsonObject.optJSONArray("meetings_hosted");
                 for(int i = 0; i <list.length(); i++) {

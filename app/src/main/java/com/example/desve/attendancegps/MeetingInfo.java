@@ -52,7 +52,7 @@ public class MeetingInfo implements Serializable {
                 Log.d("DEBUG", "UserInfo = " + users);
                 num_users = Integer.toString(users.size());
             } else {
-                num_users = "--";
+                num_users = "0";
             }
 
             if (object.has("duration")) {
