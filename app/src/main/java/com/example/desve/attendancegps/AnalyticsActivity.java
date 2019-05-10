@@ -102,7 +102,11 @@ public class AnalyticsActivity extends Activity implements Response.Listener<Str
             HostList.add(meeting);
             total_users = total_users + (Integer.parseInt(meetingInfo.getNum_users()));
         }
-        avg_attendees = total_users/total_meetings;
+        if(total_meetings == 0) {
+            avg_attendees = 0;
+        } else {
+            avg_attendees = total_users/total_meetings;
+        }
         avg_attend.setText(String.valueOf(avg_attendees));
         MeetingListAdapter hostadapter = new MeetingListAdapter(this,R.layout.adapter_view_layout, HostList);
         host_list.setAdapter(hostadapter);
